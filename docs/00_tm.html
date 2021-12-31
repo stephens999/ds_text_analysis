@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Matthew Stephens" />
+
+<meta name="date" content="2021-12-14" />
+
+<title>00_tm</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ds_text_analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">00_tm</h1>
+<h4 class="author">Matthew Stephens</h4>
+<h4 class="date">2021-12-14</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-12-31
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>ds_text_analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211214code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211214)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211214code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211214)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it difficult for you and others to run your code on a different machine. Change the absolute path(s) below to the suggested relative path(s) to make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/Users/stephens/git/ds_text_analysis/data/my_pubs
+</td>
+<td style="text-align:left;">
+data/my_pubs
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronga4d473e"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> a4d473e </a>
+</p>
+</div>
+<div id="strongRepositoryversionstronga4d473e" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version a4d473e. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  data/dtm_cleaned.csv
+    Untracked:  data/dtm_cleaned.rds
+    Untracked:  data/dtm_cleaned_stemmed.csv
+    Untracked:  data/dtm_cleaned_stemmed.rds
+
+Unstaged changes:
+    Deleted:    data/my_pubs/s41588-021-00873-4.pdf
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/00_tm.Rmd</code>) and HTML (<code>docs/00_tm.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+a4d473e
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2021-12-31
+</td>
+<td>
+workflowr::wflow_publish(“analysis/00_tm.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(tm)</code></pre>
+<pre><code>Loading required package: NLP</code></pre>
+<pre class="r"><code>library(magrittr)
+library(pdftools)</code></pre>
+<pre><code>Using poppler version 20.12.1</code></pre>
+<pre class="r"><code>library(SnowballC) #stemming</code></pre>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This is my first try at using the <code>tm</code> package to read in a bunch of my pdfs and output document term matrices (after some minimal cleaning and stemming). I save the resulting dtm matrices in the <code>data</code> subdirectory. Note: these dtms have not been filtered to remove rare words, and include a bunch of “words” that are distorted by character codes (eg maybe some equations or greek letters?). Also some words seem to be quoted even though I removed punctuation. More work could be done here to clean them up but this seemed like a good start.</p>
+</div>
+<div id="read-in-pdfs" class="section level1">
+<h1>Read in pdfs</h1>
+<p>I used <code>?tm::readPDF</code> to get started on reading in a pdf document. In installed the <code>pdftools</code> package to get this going.</p>
+<p>Here’s the code:</p>
+<pre class="r"><code>uri &lt;- paste0(&quot;file://&quot;,system.file(file.path(&quot;doc&quot;, &quot;tm.pdf&quot;), package = &quot;tm&quot;))
+engine &lt;- &quot;pdftools&quot;
+reader &lt;- readPDF(engine)
+pdf &lt;- reader(elem = list(uri = uri), language = &quot;en&quot;, id = &quot;id1&quot;)
+cat(content(pdf)[1])</code></pre>
+<pre><code>                              Introduction to the tm Package
+                                     Text Mining in R
+                                                Ingo Feinerer
+                                             November 18, 2020
+
+
+Introduction
+This vignette gives a short introduction to text mining in R utilizing the text mining framework provided by
+the tm package. We present methods for data import, corpus handling, preprocessing, metadata management,
+and creation of term-document matrices. Our focus is on the main aspects of getting started with text mining
+in R—an in-depth description of the text mining infrastructure offered by tm was published in the Journal of
+Statistical Software (Feinerer et al., 2008). An introductory article on text mining in R was published in R
+News (Feinerer, 2008).
+
+
+Data Import
+The main structure for managing documents in tm is a so-called Corpus, representing a collection of text
+documents. A corpus is an abstract concept, and there can exist several implementations in parallel. The
+default implementation is the so-called VCorpus (short for Volatile Corpus) which realizes a semantics as known
+from most R objects: corpora are R objects held fully in memory. We denote this as volatile since once the
+R object is destroyed, the whole corpus is gone. Such a volatile corpus can be created via the constructor
+VCorpus(x, readerControl). Another implementation is the PCorpus which implements a Permanent Corpus
+semantics, i.e., the documents are physically stored outside of R (e.g., in a database), corresponding R objects
+are basically only pointers to external structures, and changes to the underlying corpus are reflected to all R
+objects associated with it. Compared to the volatile corpus the corpus encapsulated by a permanent corpus
+object is not destroyed if the corresponding R object is released.
+    Within the corpus constructor, x must be a Source object which abstracts the input location. tm provides a
+set of predefined sources, e.g., DirSource, VectorSource, or DataframeSource, which handle a directory, a vector
+interpreting each component as document, or data frame like structures (like CSV files), respectively. Except
+DirSource, which is designed solely for directories on a file system, and VectorSource, which only accepts (char-
+acter) vectors, most other implemented sources can take connections as input (a character string is interpreted
+as file path). getSources() lists available sources, and users can create their own sources.
+    The second argument readerControl of the corpus constructor has to be a list with the named components
+reader and language. The first component reader constructs a text document from elements delivered by
+a source. The tm package ships with several readers (e.g., readPlain(), readPDF(), readDOC(), . . . ). See
+getReaders() for an up-to-date list of available readers. Each source has a default reader which can be
+overridden. E.g., for DirSource the default just reads in the input files and interprets their content as text.
+Finally, the second component language sets the texts’ language (preferably using ISO 639-2 codes).
+    In case of a permanent corpus, a third argument dbControl has to be a list with the named components
+dbName giving the filename holding the sourced out objects (i.e., the database), and dbType holding a valid
+database type as supported by package filehash. Activated database support reduces the memory demand,
+however, access gets slower since each operation is limited by the hard disk’s read and write capabilities.
+    So e.g., plain text files in the directory txt containing Latin (lat) texts by the Roman poet Ovid can be
+read in with following code:
+&gt; txt &lt;- system.file(&quot;texts&quot;, &quot;txt&quot;, package = &quot;tm&quot;)
+&gt; (ovid &lt;- VCorpus(DirSource(txt, encoding = &quot;UTF-8&quot;),
++                  readerControl = list(language = &quot;lat&quot;)))
+
+&lt;&lt;VCorpus&gt;&gt;
+Metadata: corpus specific: 0, document level (indexed): 0
+Content: documents: 5
+
+                                                       1</code></pre>
+<pre class="r"><code>temp = VCorpus(URISource(uri, mode = &quot;&quot;), readerControl = list(reader = readPDF(engine)))</code></pre>
+<p>Next I apply this to a set of pdf of my papers (in an external directory as I don’t want to include these in the repo). Some of the pdfs seems to have non-standard entries and throw errors in readPDF. To avoid this causing problems when knitting I wrapped it in a <code>try</code> statement; as a result these pdfs will not be included. I don’t know which pdfs are causing the problems for now. (To assess which pdfs are causing problems it might be helpful to note the following code can read in a pdf <code>txt &lt;- pdftools::pdf_text("data/my_pubs/s41588-021-00873-4.pdf")</code></p>
+<pre class="r"><code>#my_corpus &lt;- VCorpus(DirSource(&quot;/Users/stephens/git/ds_text_analysis/data/my_pubs&quot;, pattern = &quot;.pdf&quot;), readerControl = list(reader = readPDF))
+try(my_corpus &lt;- VCorpus(DirSource(&quot;/Users/stephens/Library/CloudStorage/Box-Box/stephens_papers&quot;, pattern = &quot;.pdf&quot;), readerControl = list(reader = readPDF)), outFile = stdout())</code></pre>
+<pre><code>PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (34246): insufficient arguments for Marked Content
+PDF error (34246): insufficient arguments for Marked Content
+PDF error (34246): insufficient arguments for Marked Content
+PDF error (34246): insufficient arguments for Marked Content
+PDF error (34246): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (42279): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (42279): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (42279): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (42279): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (2521057): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (2521057): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (2521057): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (2521057): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (2552224): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (2552224): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight
+PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (42346): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (42346): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1398378): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1398378): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1398378): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1398378): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1436215): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1436215): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1436215): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1436215): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1454204): insufficient arguments for Marked Content</code></pre>
+<pre><code>PDF error: Invalid Font Weight</code></pre>
+<pre><code>PDF error (1454204): insufficient arguments for Marked Content</code></pre>
+<pre class="r"><code>summary(my_corpus)</code></pre>
+<pre><code>                                                                                                                         Length
+027.082.0408.pdf                                                                                                         2     
+1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf                                                           2     
+1705.08393.pdf                                                                                                           2     
+1709.06597.pdf                                                                                                           2     
+1812.07488.pdf                                                                                                           2     
+19-042.pdf                                                                                                               2     
+1901.10679.pdf                                                                                                           2     
+20-589.pdf                                                                                                               2     
+2012_Zhou&amp;Stephens_NG.pdf                                                                                                2     
+2013_Zhouetal_PG.pdf                                                                                                     2     
+2014_Zhou&amp;Stephens_NM.pdf                                                                                                2     
+2021.11.03.467167v1.full.pdf                                                                                             2     
+2105.13440.pdf                                                                                                           2     
+2106.13634.pdf                                                                                                           2     
+2110.00152.pdf                                                                                                           2     
+368316v2.full.pdf                                                                                                        2     
+501114v4.full.pdf                                                                                                        2     
+A Fast Algorithm for Maximum Likelihood Estimation of Mixture Proportions Using Sequential Quadratic Programming.pdf     2     
+alasadi2019.pdf                                                                                                          2     
+AOAS0912-021R2A0.pdf                                                                                                     2     
+barber2010.pdf                                                                                                           2     
+barreiro2010.pdf                                                                                                         2     
+Basu2010.pdf                                                                                                             2     
+Bhangale2006.pdf                                                                                                         2     
+biosts_21_1_15.pdf                                                                                                       2     
+Blekhman2010.pdf                                                                                                         2     
+bty779.pdf                                                                                                               2     
+Carbonetto2012.pdf                                                                                                       2     
+carbonetto2013.pdf                                                                                                       2     
+Crawford2004.pdf                                                                                                         2     
+degner2012.pdf                                                                                                           2     
+dey2007.pdf                                                                                                              2     
+DuRaedt2006.pdf                                                                                                          2     
+elife-04729-v1.pdf                                                                                                       2     
+elife-33084-v2.pdf                                                                                                       2     
+elife-57345-v2.pdf                                                                                                       2     
+engelhardt2010.pdf                                                                                                       2     
+Falush2003a.pdf                                                                                                          2     
+Falush2003b.pdf                                                                                                          2     
+Falush2007.pdf                                                                                                           2     
+FledelAlon2011.pdf                                                                                                       2     
+flutre2013.pdf                                                                                                           2     
+Fu2010.pdf                                                                                                               2     
+fu2012.pdf                                                                                                               2     
+g3journal0457.pdf                                                                                                        2     
+gb-2012-13-1-r7.pdf                                                                                                      2     
+genetics0789.pdf                                                                                                         2     
+genetics1243.pdf                                                                                                         2     
+Genome Res.-2012-Perry-602-10.pdf                                                                                        2     
+Genome Res.-2020-Hsiao-611-21.pdf                                                                                        2     
+Global Ecology and Biogeography - 2021 - White - Dispersal syndromes drive the formation of biogeographical regions .pdf 2     
+Gottardo2006.pdf                                                                                                         2     
+Guan2008.pdf                                                                                                             2     
+HapMap2005.pdf                                                                                                           2     
+hart2012.pdf                                                                                                             2     
+Hellenthal2006a.pdf                                                                                                      2     
+Hellenthal2006b.pdf                                                                                                      2     
+Hellenthal2007.pdf                                                                                                       2     
+Howie2012.pdf                                                                                                            2     
+Hubisz2009.pdf                                                                                                           2     
+kxw041.pdf                                                                                                               2     
+Li2003.pdf                                                                                                               2     
+Li2010.pdf                                                                                                               2     
+li2012.pdf                                                                                                               2     
+lu-stephens-2016.pdf                                                                                                     2     
+luca2013.pdf                                                                                                             2     
+mangravite2013.pdf                                                                                                       2     
+maranville2011.pdf                                                                                                       2     
+Maranville2012.pdf                                                                                                       2     
+Marchini2006.pdf                                                                                                         2     
+Marioni2008.pdf                                                                                                          2     
+Mondol2015.pdf                                                                                                           2     
+msy006.pdf                                                                                                               2     
+Novembre2008.pdf                                                                                                         2     
+Novembre2008b.pdf                                                                                                        2     
+pai2012.pdf                                                                                                              2     
+Petkova2016.pdf                                                                                                          2     
+Pickrell2010.pdf                                                                                                         2     
+Pritchard2000a.pdf                                                                                                       2     
+Pritchard2000b.pdf                                                                                                       2     
+Ptak2004.pdf                                                                                                             2     
+raj2014.pdf                                                                                                              2     
+Raj2015.pdf                                                                                                              2     
+Raj2016.pdf                                                                                                              2     
+Reiner2008.pdf                                                                                                           2     
+Roychoudhury2007.pdf                                                                                                     2     
+s12859-018-2489-3.pdf                                                                                                    2     
+s13059-014-0547-3.pdf                                                                                                    2     
+s41437-018-0105-y.pdf                                                                                                    2     
+s41467-018-06805-x.pdf                                                                                                   2     
+s41467-019-10253-6.pdf                                                                                                   2     
+s41467-019-11284-9.pdf                                                                                                   2     
+s41588-018-0268-8.pdf                                                                                                    2     
+s41588-020-0631-4.pdf                                                                                                    2     
+s41588-020-0644-z.pdf                                                                                                    2     
+s41588-021-00873-4.pdf                                                                                                   2     
+sarkar2019.pdf                                                                                                           2     
+Scheet2006.pdf                                                                                                           2     
+Scheet2008.pdf                                                                                                           2     
+Schor2017.pdf                                                                                                            2     
+science.aaz8528.pdf                                                                                                      2     
+Servin2007.pdf                                                                                                           2     
+Shim2015.pdf                                                                                                             2     
+shim2015b.pdf                                                                                                            2     
+Shiraishi2015.pdf                                                                                                        2     
+step0444.pdf                                                                                                             2     
+Stephens2000a.pdf                                                                                                        2     
+Stephens2000b.pdf                                                                                                        2     
+Stephens2000c.pdf                                                                                                        2     
+Stephens2000d.pdf                                                                                                        2     
+Stephens2001.pdf                                                                                                         2     
+Stephens2003a.pdf                                                                                                        2     
+Stephens2003b.pdf                                                                                                        2     
+Stephens2005.pdf                                                                                                         2     
+Stephens2006.pdf                                                                                                         2     
+Stephens2009.pdf                                                                                                         2     
+stephens2013.pdf                                                                                                         2     
+turchin2019.pdf                                                                                                          2     
+Veyrieras2008.pdf                                                                                                        2     
+Veyrieras2012.pdf                                                                                                        2     
+Wasser2004.pdf                                                                                                           2     
+Wasser2007.pdf                                                                                                           2     
+Wasser2008.pdf                                                                                                           2     
+Wen2010.pdf                                                                                                              2     
+WenStephens2014.pdf                                                                                                      2     
+Zhu2017.pdf                                                                                                              2     
+                                                                                                                         Class            
+027.082.0408.pdf                                                                                                         PlainTextDocument
+1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf                                                           PlainTextDocument
+1705.08393.pdf                                                                                                           PlainTextDocument
+1709.06597.pdf                                                                                                           PlainTextDocument
+1812.07488.pdf                                                                                                           PlainTextDocument
+19-042.pdf                                                                                                               PlainTextDocument
+1901.10679.pdf                                                                                                           PlainTextDocument
+20-589.pdf                                                                                                               PlainTextDocument
+2012_Zhou&amp;Stephens_NG.pdf                                                                                                PlainTextDocument
+2013_Zhouetal_PG.pdf                                                                                                     PlainTextDocument
+2014_Zhou&amp;Stephens_NM.pdf                                                                                                PlainTextDocument
+2021.11.03.467167v1.full.pdf                                                                                             PlainTextDocument
+2105.13440.pdf                                                                                                           PlainTextDocument
+2106.13634.pdf                                                                                                           PlainTextDocument
+2110.00152.pdf                                                                                                           PlainTextDocument
+368316v2.full.pdf                                                                                                        PlainTextDocument
+501114v4.full.pdf                                                                                                        PlainTextDocument
+A Fast Algorithm for Maximum Likelihood Estimation of Mixture Proportions Using Sequential Quadratic Programming.pdf     PlainTextDocument
+alasadi2019.pdf                                                                                                          PlainTextDocument
+AOAS0912-021R2A0.pdf                                                                                                     PlainTextDocument
+barber2010.pdf                                                                                                           PlainTextDocument
+barreiro2010.pdf                                                                                                         PlainTextDocument
+Basu2010.pdf                                                                                                             PlainTextDocument
+Bhangale2006.pdf                                                                                                         PlainTextDocument
+biosts_21_1_15.pdf                                                                                                       PlainTextDocument
+Blekhman2010.pdf                                                                                                         PlainTextDocument
+bty779.pdf                                                                                                               PlainTextDocument
+Carbonetto2012.pdf                                                                                                       PlainTextDocument
+carbonetto2013.pdf                                                                                                       PlainTextDocument
+Crawford2004.pdf                                                                                                         PlainTextDocument
+degner2012.pdf                                                                                                           PlainTextDocument
+dey2007.pdf                                                                                                              PlainTextDocument
+DuRaedt2006.pdf                                                                                                          PlainTextDocument
+elife-04729-v1.pdf                                                                                                       PlainTextDocument
+elife-33084-v2.pdf                                                                                                       PlainTextDocument
+elife-57345-v2.pdf                                                                                                       PlainTextDocument
+engelhardt2010.pdf                                                                                                       PlainTextDocument
+Falush2003a.pdf                                                                                                          PlainTextDocument
+Falush2003b.pdf                                                                                                          PlainTextDocument
+Falush2007.pdf                                                                                                           PlainTextDocument
+FledelAlon2011.pdf                                                                                                       PlainTextDocument
+flutre2013.pdf                                                                                                           PlainTextDocument
+Fu2010.pdf                                                                                                               PlainTextDocument
+fu2012.pdf                                                                                                               PlainTextDocument
+g3journal0457.pdf                                                                                                        PlainTextDocument
+gb-2012-13-1-r7.pdf                                                                                                      PlainTextDocument
+genetics0789.pdf                                                                                                         PlainTextDocument
+genetics1243.pdf                                                                                                         PlainTextDocument
+Genome Res.-2012-Perry-602-10.pdf                                                                                        PlainTextDocument
+Genome Res.-2020-Hsiao-611-21.pdf                                                                                        PlainTextDocument
+Global Ecology and Biogeography - 2021 - White - Dispersal syndromes drive the formation of biogeographical regions .pdf PlainTextDocument
+Gottardo2006.pdf                                                                                                         PlainTextDocument
+Guan2008.pdf                                                                                                             PlainTextDocument
+HapMap2005.pdf                                                                                                           PlainTextDocument
+hart2012.pdf                                                                                                             PlainTextDocument
+Hellenthal2006a.pdf                                                                                                      PlainTextDocument
+Hellenthal2006b.pdf                                                                                                      PlainTextDocument
+Hellenthal2007.pdf                                                                                                       PlainTextDocument
+Howie2012.pdf                                                                                                            PlainTextDocument
+Hubisz2009.pdf                                                                                                           PlainTextDocument
+kxw041.pdf                                                                                                               PlainTextDocument
+Li2003.pdf                                                                                                               PlainTextDocument
+Li2010.pdf                                                                                                               PlainTextDocument
+li2012.pdf                                                                                                               PlainTextDocument
+lu-stephens-2016.pdf                                                                                                     PlainTextDocument
+luca2013.pdf                                                                                                             PlainTextDocument
+mangravite2013.pdf                                                                                                       PlainTextDocument
+maranville2011.pdf                                                                                                       PlainTextDocument
+Maranville2012.pdf                                                                                                       PlainTextDocument
+Marchini2006.pdf                                                                                                         PlainTextDocument
+Marioni2008.pdf                                                                                                          PlainTextDocument
+Mondol2015.pdf                                                                                                           PlainTextDocument
+msy006.pdf                                                                                                               PlainTextDocument
+Novembre2008.pdf                                                                                                         PlainTextDocument
+Novembre2008b.pdf                                                                                                        PlainTextDocument
+pai2012.pdf                                                                                                              PlainTextDocument
+Petkova2016.pdf                                                                                                          PlainTextDocument
+Pickrell2010.pdf                                                                                                         PlainTextDocument
+Pritchard2000a.pdf                                                                                                       PlainTextDocument
+Pritchard2000b.pdf                                                                                                       PlainTextDocument
+Ptak2004.pdf                                                                                                             PlainTextDocument
+raj2014.pdf                                                                                                              PlainTextDocument
+Raj2015.pdf                                                                                                              PlainTextDocument
+Raj2016.pdf                                                                                                              PlainTextDocument
+Reiner2008.pdf                                                                                                           PlainTextDocument
+Roychoudhury2007.pdf                                                                                                     PlainTextDocument
+s12859-018-2489-3.pdf                                                                                                    PlainTextDocument
+s13059-014-0547-3.pdf                                                                                                    PlainTextDocument
+s41437-018-0105-y.pdf                                                                                                    PlainTextDocument
+s41467-018-06805-x.pdf                                                                                                   PlainTextDocument
+s41467-019-10253-6.pdf                                                                                                   PlainTextDocument
+s41467-019-11284-9.pdf                                                                                                   PlainTextDocument
+s41588-018-0268-8.pdf                                                                                                    PlainTextDocument
+s41588-020-0631-4.pdf                                                                                                    PlainTextDocument
+s41588-020-0644-z.pdf                                                                                                    PlainTextDocument
+s41588-021-00873-4.pdf                                                                                                   PlainTextDocument
+sarkar2019.pdf                                                                                                           PlainTextDocument
+Scheet2006.pdf                                                                                                           PlainTextDocument
+Scheet2008.pdf                                                                                                           PlainTextDocument
+Schor2017.pdf                                                                                                            PlainTextDocument
+science.aaz8528.pdf                                                                                                      PlainTextDocument
+Servin2007.pdf                                                                                                           PlainTextDocument
+Shim2015.pdf                                                                                                             PlainTextDocument
+shim2015b.pdf                                                                                                            PlainTextDocument
+Shiraishi2015.pdf                                                                                                        PlainTextDocument
+step0444.pdf                                                                                                             PlainTextDocument
+Stephens2000a.pdf                                                                                                        PlainTextDocument
+Stephens2000b.pdf                                                                                                        PlainTextDocument
+Stephens2000c.pdf                                                                                                        PlainTextDocument
+Stephens2000d.pdf                                                                                                        PlainTextDocument
+Stephens2001.pdf                                                                                                         PlainTextDocument
+Stephens2003a.pdf                                                                                                        PlainTextDocument
+Stephens2003b.pdf                                                                                                        PlainTextDocument
+Stephens2005.pdf                                                                                                         PlainTextDocument
+Stephens2006.pdf                                                                                                         PlainTextDocument
+Stephens2009.pdf                                                                                                         PlainTextDocument
+stephens2013.pdf                                                                                                         PlainTextDocument
+turchin2019.pdf                                                                                                          PlainTextDocument
+Veyrieras2008.pdf                                                                                                        PlainTextDocument
+Veyrieras2012.pdf                                                                                                        PlainTextDocument
+Wasser2004.pdf                                                                                                           PlainTextDocument
+Wasser2007.pdf                                                                                                           PlainTextDocument
+Wasser2008.pdf                                                                                                           PlainTextDocument
+Wen2010.pdf                                                                                                              PlainTextDocument
+WenStephens2014.pdf                                                                                                      PlainTextDocument
+Zhu2017.pdf                                                                                                              PlainTextDocument
+                                                                                                                         Mode
+027.082.0408.pdf                                                                                                         list
+1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf                                                           list
+1705.08393.pdf                                                                                                           list
+1709.06597.pdf                                                                                                           list
+1812.07488.pdf                                                                                                           list
+19-042.pdf                                                                                                               list
+1901.10679.pdf                                                                                                           list
+20-589.pdf                                                                                                               list
+2012_Zhou&amp;Stephens_NG.pdf                                                                                                list
+2013_Zhouetal_PG.pdf                                                                                                     list
+2014_Zhou&amp;Stephens_NM.pdf                                                                                                list
+2021.11.03.467167v1.full.pdf                                                                                             list
+2105.13440.pdf                                                                                                           list
+2106.13634.pdf                                                                                                           list
+2110.00152.pdf                                                                                                           list
+368316v2.full.pdf                                                                                                        list
+501114v4.full.pdf                                                                                                        list
+A Fast Algorithm for Maximum Likelihood Estimation of Mixture Proportions Using Sequential Quadratic Programming.pdf     list
+alasadi2019.pdf                                                                                                          list
+AOAS0912-021R2A0.pdf                                                                                                     list
+barber2010.pdf                                                                                                           list
+barreiro2010.pdf                                                                                                         list
+Basu2010.pdf                                                                                                             list
+Bhangale2006.pdf                                                                                                         list
+biosts_21_1_15.pdf                                                                                                       list
+Blekhman2010.pdf                                                                                                         list
+bty779.pdf                                                                                                               list
+Carbonetto2012.pdf                                                                                                       list
+carbonetto2013.pdf                                                                                                       list
+Crawford2004.pdf                                                                                                         list
+degner2012.pdf                                                                                                           list
+dey2007.pdf                                                                                                              list
+DuRaedt2006.pdf                                                                                                          list
+elife-04729-v1.pdf                                                                                                       list
+elife-33084-v2.pdf                                                                                                       list
+elife-57345-v2.pdf                                                                                                       list
+engelhardt2010.pdf                                                                                                       list
+Falush2003a.pdf                                                                                                          list
+Falush2003b.pdf                                                                                                          list
+Falush2007.pdf                                                                                                           list
+FledelAlon2011.pdf                                                                                                       list
+flutre2013.pdf                                                                                                           list
+Fu2010.pdf                                                                                                               list
+fu2012.pdf                                                                                                               list
+g3journal0457.pdf                                                                                                        list
+gb-2012-13-1-r7.pdf                                                                                                      list
+genetics0789.pdf                                                                                                         list
+genetics1243.pdf                                                                                                         list
+Genome Res.-2012-Perry-602-10.pdf                                                                                        list
+Genome Res.-2020-Hsiao-611-21.pdf                                                                                        list
+Global Ecology and Biogeography - 2021 - White - Dispersal syndromes drive the formation of biogeographical regions .pdf list
+Gottardo2006.pdf                                                                                                         list
+Guan2008.pdf                                                                                                             list
+HapMap2005.pdf                                                                                                           list
+hart2012.pdf                                                                                                             list
+Hellenthal2006a.pdf                                                                                                      list
+Hellenthal2006b.pdf                                                                                                      list
+Hellenthal2007.pdf                                                                                                       list
+Howie2012.pdf                                                                                                            list
+Hubisz2009.pdf                                                                                                           list
+kxw041.pdf                                                                                                               list
+Li2003.pdf                                                                                                               list
+Li2010.pdf                                                                                                               list
+li2012.pdf                                                                                                               list
+lu-stephens-2016.pdf                                                                                                     list
+luca2013.pdf                                                                                                             list
+mangravite2013.pdf                                                                                                       list
+maranville2011.pdf                                                                                                       list
+Maranville2012.pdf                                                                                                       list
+Marchini2006.pdf                                                                                                         list
+Marioni2008.pdf                                                                                                          list
+Mondol2015.pdf                                                                                                           list
+msy006.pdf                                                                                                               list
+Novembre2008.pdf                                                                                                         list
+Novembre2008b.pdf                                                                                                        list
+pai2012.pdf                                                                                                              list
+Petkova2016.pdf                                                                                                          list
+Pickrell2010.pdf                                                                                                         list
+Pritchard2000a.pdf                                                                                                       list
+Pritchard2000b.pdf                                                                                                       list
+Ptak2004.pdf                                                                                                             list
+raj2014.pdf                                                                                                              list
+Raj2015.pdf                                                                                                              list
+Raj2016.pdf                                                                                                              list
+Reiner2008.pdf                                                                                                           list
+Roychoudhury2007.pdf                                                                                                     list
+s12859-018-2489-3.pdf                                                                                                    list
+s13059-014-0547-3.pdf                                                                                                    list
+s41437-018-0105-y.pdf                                                                                                    list
+s41467-018-06805-x.pdf                                                                                                   list
+s41467-019-10253-6.pdf                                                                                                   list
+s41467-019-11284-9.pdf                                                                                                   list
+s41588-018-0268-8.pdf                                                                                                    list
+s41588-020-0631-4.pdf                                                                                                    list
+s41588-020-0644-z.pdf                                                                                                    list
+s41588-021-00873-4.pdf                                                                                                   list
+sarkar2019.pdf                                                                                                           list
+Scheet2006.pdf                                                                                                           list
+Scheet2008.pdf                                                                                                           list
+Schor2017.pdf                                                                                                            list
+science.aaz8528.pdf                                                                                                      list
+Servin2007.pdf                                                                                                           list
+Shim2015.pdf                                                                                                             list
+shim2015b.pdf                                                                                                            list
+Shiraishi2015.pdf                                                                                                        list
+step0444.pdf                                                                                                             list
+Stephens2000a.pdf                                                                                                        list
+Stephens2000b.pdf                                                                                                        list
+Stephens2000c.pdf                                                                                                        list
+Stephens2000d.pdf                                                                                                        list
+Stephens2001.pdf                                                                                                         list
+Stephens2003a.pdf                                                                                                        list
+Stephens2003b.pdf                                                                                                        list
+Stephens2005.pdf                                                                                                         list
+Stephens2006.pdf                                                                                                         list
+Stephens2009.pdf                                                                                                         list
+stephens2013.pdf                                                                                                         list
+turchin2019.pdf                                                                                                          list
+Veyrieras2008.pdf                                                                                                        list
+Veyrieras2012.pdf                                                                                                        list
+Wasser2004.pdf                                                                                                           list
+Wasser2007.pdf                                                                                                           list
+Wasser2008.pdf                                                                                                           list
+Wen2010.pdf                                                                                                              list
+WenStephens2014.pdf                                                                                                      list
+Zhu2017.pdf                                                                                                              list</code></pre>
+<pre class="r"><code># writeLines(as.character(my_corpus[[1]])) # creates a lot of output but can be useful to inspect contents of a document interactively....</code></pre>
+<p>We can get a document-term matrix usign DocumentTermMatrix:</p>
+<pre class="r"><code>dtm &lt;- DocumentTermMatrix(my_corpus)
+inspect(dtm[,2000:2005])</code></pre>
+<pre><code>&lt;&lt;DocumentTermMatrix (documents: 126, terms: 6)&gt;&gt;
+Non-/sparse entries: 10/746
+Sparsity           : 99%
+Maximal term length: 12
+Weighting          : term frequency (tf)
+Sample             :
+                                                                Terms
+Docs                                                             “loadings”),
+  027.082.0408.pdf                                                          0
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf            0
+  1812.07488.pdf                                                            0
+  20-589.pdf                                                                1
+  2106.13634.pdf                                                            0
+  AOAS0912-021R2A0.pdf                                                      0
+  kxw041.pdf                                                                0
+  msy006.pdf                                                                0
+  s41467-019-11284-9.pdf                                                    0
+  Scheet2006.pdf                                                            0
+                                                                Terms
+Docs                                                             “local “local”
+  027.082.0408.pdf                                                    0       0
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf      0       0
+  1812.07488.pdf                                                      2       0
+  20-589.pdf                                                          0       0
+  2106.13634.pdf                                                      0       0
+  AOAS0912-021R2A0.pdf                                                1       0
+  kxw041.pdf                                                          5       1
+  msy006.pdf                                                          0       1
+  s41467-019-11284-9.pdf                                              0       0
+  Scheet2006.pdf                                                      1       0
+                                                                Terms
+Docs                                                             “local”:
+  027.082.0408.pdf                                                      0
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf        0
+  1812.07488.pdf                                                        0
+  20-589.pdf                                                            0
+  2106.13634.pdf                                                        0
+  AOAS0912-021R2A0.pdf                                                  1
+  kxw041.pdf                                                            0
+  msy006.pdf                                                            0
+  s41467-019-11284-9.pdf                                                0
+  Scheet2006.pdf                                                        0
+                                                                Terms
+Docs                                                             “locations”
+  027.082.0408.pdf                                                         0
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf           0
+  1812.07488.pdf                                                           0
+  20-589.pdf                                                               0
+  2106.13634.pdf                                                           1
+  AOAS0912-021R2A0.pdf                                                     0
+  kxw041.pdf                                                               0
+  msy006.pdf                                                               0
+  s41467-019-11284-9.pdf                                                   0
+  Scheet2006.pdf                                                           0
+                                                                Terms
+Docs                                                             “lof”
+  027.082.0408.pdf                                                   0
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf     0
+  1812.07488.pdf                                                     0
+  20-589.pdf                                                         0
+  2106.13634.pdf                                                     0
+  AOAS0912-021R2A0.pdf                                               0
+  kxw041.pdf                                                         0
+  msy006.pdf                                                         0
+  s41467-019-11284-9.pdf                                             2
+  Scheet2006.pdf                                                     0</code></pre>
+</div>
+<div id="cleaning" class="section level1">
+<h1>Cleaning</h1>
+<p>It is clear we are going to want to clean up the documents - eg remove stop words, punctuation, etc. I’m using some of the steps used here: <a href="https://eight2late.wordpress.com/2015/05/27/a-gentle-introduction-to-text-mining-using-r/" class="uri">https://eight2late.wordpress.com/2015/05/27/a-gentle-introduction-to-text-mining-using-r/</a> as a starting point.</p>
+<p>I’m transforming to lower case, removing numbers and punctuation, removing stop words.</p>
+<pre class="r"><code>getTransformations()</code></pre>
+<pre><code>[1] &quot;removeNumbers&quot;     &quot;removePunctuation&quot; &quot;removeWords&quot;      
+[4] &quot;stemDocument&quot;      &quot;stripWhitespace&quot;  </code></pre>
+<pre class="r"><code>cleaned_corpus &lt;- my_corpus %&gt;% 
+    tm_map(stripWhitespace) %&gt;% 
+    tm_map(content_transformer(tolower)) %&gt;% 
+    tm_map(removeNumbers) %&gt;% 
+    tm_map(removePunctuation) %&gt;% 
+    tm_map(removeWords, stopwords(&quot;en&quot;))
+
+
+dtm_cleaned &lt;- DocumentTermMatrix(cleaned_corpus)
+inspect(dtm_cleaned[,2000:2020])</code></pre>
+<pre><code>&lt;&lt;DocumentTermMatrix (documents: 126, terms: 21)&gt;&gt;
+Non-/sparse entries: 428/2218
+Sparsity           : 84%
+Maximal term length: 14
+Weighting          : term frequency (tf)
+Sample             :
+                       Terms
+Docs                    according accordingly account accounted accounting
+  Carbonetto2012.pdf            6           1       3         0          1
+  g3journal0457.pdf             0           0       1         0          0
+  genetics0789.pdf              0           1      18         0          5
+  Guan2008.pdf                  3           0       4         0          0
+  Howie2012.pdf                 0           0       2         0          2
+  raj2014.pdf                   0           0       2         0          0
+  Raj2015.pdf                   0           0       8         1          1
+  s41437-018-0105-y.pdf         3           1       4         0          0
+  Stephens2000a.pdf            15           0       7         0          0
+  Stephens2005.pdf              4           0      11         0          6
+                       Terms
+Docs                    accounts accu accumulation accuracies accuracy
+  Carbonetto2012.pdf           2    1            0          0       19
+  g3journal0457.pdf            0    3            0          1       99
+  genetics0789.pdf             2    1            0          0        9
+  Guan2008.pdf                 0    0            0          0       46
+  Howie2012.pdf                1    1            0          0       35
+  raj2014.pdf                  2    2            0          6       26
+  Raj2015.pdf                  0    0            0          2       40
+  s41437-018-0105-y.pdf        0    1            1          3       37
+  Stephens2000a.pdf            0    1            0          0       14
+  Stephens2005.pdf             0    2            0          0       35</code></pre>
+</div>
+<div id="stemming" class="section level1">
+<h1>Stemming</h1>
+<p>I’m not experienced engough to know how important stemming will be here but here is a simple stemmer:</p>
+<pre class="r"><code>stemmed_corpus &lt;-  cleaned_corpus %&gt;% tm_map(stemDocument)
+dtm_cleaned_stemmed &lt;- DocumentTermMatrix(stemmed_corpus)
+inspect(dtm_cleaned_stemmed[,2000:2020])</code></pre>
+<pre><code>&lt;&lt;DocumentTermMatrix (documents: 126, terms: 21)&gt;&gt;
+Non-/sparse entries: 286/2360
+Sparsity           : 89%
+Maximal term length: 20
+Weighting          : term frequency (tf)
+Sample             :
+                                                                Terms
+Docs                                                             add
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf   5
+  1709.06597.pdf                                                   0
+  501114v4.full.pdf                                                0
+  carbonetto2013.pdf                                               1
+  gb-2012-13-1-r7.pdf                                              2
+  Raj2016.pdf                                                      0
+  s12859-018-2489-3.pdf                                            2
+  s13059-014-0547-3.pdf                                            0
+  Shiraishi2015.pdf                                                1
+  Stephens2009.pdf                                                 3
+                                                                Terms
+Docs                                                             addcolumnpriorfamili
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf                    0
+  1709.06597.pdf                                                                    0
+  501114v4.full.pdf                                                                 0
+  carbonetto2013.pdf                                                                0
+  gb-2012-13-1-r7.pdf                                                               0
+  Raj2016.pdf                                                                       0
+  s12859-018-2489-3.pdf                                                             0
+  s13059-014-0547-3.pdf                                                             0
+  Shiraishi2015.pdf                                                                 0
+  Stephens2009.pdf                                                                  0
+                                                                Terms
+Docs                                                             adden addendum
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf     0        0
+  1709.06597.pdf                                                     0        0
+  501114v4.full.pdf                                                  0        0
+  carbonetto2013.pdf                                                 0        0
+  gb-2012-13-1-r7.pdf                                                0        0
+  Raj2016.pdf                                                        0        0
+  s12859-018-2489-3.pdf                                              0        0
+  s13059-014-0547-3.pdf                                              0        0
+  Shiraishi2015.pdf                                                  0        0
+  Stephens2009.pdf                                                   0        0
+                                                                Terms
+Docs                                                             addi addict
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf    0      0
+  1709.06597.pdf                                                    0      0
+  501114v4.full.pdf                                                 0      0
+  carbonetto2013.pdf                                                0      0
+  gb-2012-13-1-r7.pdf                                               1      0
+  Raj2016.pdf                                                       1      0
+  s12859-018-2489-3.pdf                                             0      0
+  s13059-014-0547-3.pdf                                             0      0
+  Shiraishi2015.pdf                                                 0      0
+  Stephens2009.pdf                                                  0      0
+                                                                Terms
+Docs                                                             addit address
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf    16       6
+  1709.06597.pdf                                                    22       2
+  501114v4.full.pdf                                                 22       6
+  carbonetto2013.pdf                                                33       6
+  gb-2012-13-1-r7.pdf                                               33       3
+  Raj2016.pdf                                                       26       4
+  s12859-018-2489-3.pdf                                             31       0
+  s13059-014-0547-3.pdf                                             94       3
+  Shiraishi2015.pdf                                                 17       3
+  Stephens2009.pdf                                                  36       2
+                                                                Terms
+Docs                                                             ade adenosin
+  1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf   0        0
+  1709.06597.pdf                                                   0        0
+  501114v4.full.pdf                                                0        0
+  carbonetto2013.pdf                                               0        0
+  gb-2012-13-1-r7.pdf                                              0        0
+  Raj2016.pdf                                                      0        0
+  s12859-018-2489-3.pdf                                            0        0
+  s13059-014-0547-3.pdf                                            0        0
+  Shiraishi2015.pdf                                                0        0
+  Stephens2009.pdf                                                 0        0</code></pre>
+</div>
+<div id="simple-manipulation" class="section level1">
+<h1>Simple manipulation</h1>
+<pre class="r"><code>freq &lt;- colSums(as.matrix(dtm_cleaned))
+doc_len &lt;- rowSums(as.matrix(dtm_cleaned_stemmed))
+head(sort(freq,decreasing = TRUE),n=20)</code></pre>
+<pre><code>       data       model       using     methods        gene        snps 
+       6925        3896        3249        3179        3102        2741 
+   analysis       genes         can  expression         one     results 
+       2674        2525        2498        2497        2384        2209 
+       used     genetic      figure  population      number association 
+       2138        2059        2042        2027        2009        1997 
+       also         two 
+       1956        1939 </code></pre>
+<pre class="r"><code>head(doc_len)</code></pre>
+<pre><code>                                              027.082.0408.pdf 
+                                                           435 
+1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf 
+                                                          5919 
+                                                1705.08393.pdf 
+                                                          7355 
+                                                1709.06597.pdf 
+                                                          6279 
+                                                1812.07488.pdf 
+                                                          5861 
+                                                    19-042.pdf 
+                                                          6985 </code></pre>
+</div>
+<div id="save-dtm-matrices" class="section level1">
+<h1>Save dtm matrices</h1>
+<pre class="r"><code>write.csv(as.matrix(dtm_cleaned),&quot;data/dtm_cleaned.csv&quot;)
+write.csv(as.matrix(dtm_cleaned),&quot;data/dtm_cleaned_stemmed.csv&quot;)
+saveRDS(dtm_cleaned,&quot;data/dtm_cleaned.rds&quot;)
+saveRDS(dtm_cleaned_stemmed,&quot;data/dtm_cleaned_stemmed.rds&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 Patched (2021-07-20 r80657)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Monterey 12.0.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] SnowballC_0.7.0 pdftools_3.0.1  magrittr_2.0.1  tm_0.7-8       
+[5] NLP_0.2-1       workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.7       pillar_1.6.4     compiler_4.1.0   later_1.3.0     
+ [5] jquerylib_0.1.4  git2r_0.29.0     highr_0.9        tools_4.1.0     
+ [9] digest_0.6.28    evaluate_0.14    lifecycle_1.0.1  tibble_3.1.6    
+[13] pkgconfig_2.0.3  rlang_0.4.12     yaml_2.2.1       parallel_4.1.0  
+[17] xfun_0.28        fastmap_1.1.0    stringr_1.4.0    knitr_1.36      
+[21] xml2_1.3.2       askpass_1.1      fs_1.5.0         vctrs_0.3.8     
+[25] rprojroot_2.0.2  glue_1.5.0       qpdf_1.1         R6_2.5.1        
+[29] fansi_0.5.0      rmarkdown_2.11   whisker_0.4      promises_1.2.0.1
+[33] ellipsis_0.3.2   htmltools_0.5.2  httpuv_1.6.3     utf8_1.2.2      
+[37] stringi_1.7.5    slam_0.1-49      crayon_1.4.2    </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
