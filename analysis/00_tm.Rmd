@@ -1,0 +1,121 @@
+---
+title: "00_tm"
+author: "Matthew Stephens"
+date: "2021-12-14"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tm)
+library(magrittr)
+library(pdftools)
+library(SnowballC) #stemming
+```
+
+# Introduction
+
+This is my first try at using the `tm` package to read in a bunch of my pdfs
+and output document term matrices (after some minimal cleaning and stemming). 
+I save the resulting dtm matrices in the `data` subdirectory. Note: these
+dtms have not been filtered to remove rare words, and
+include a bunch of "words" that are distorted by character codes (eg maybe
+some equations or greek letters?). Also some words seem to be quoted even
+though I removed punctuation. More work could be done here to clean them up but
+this seemed like a good start.
+
+
+# Read in pdfs
+
+I used `?tm::readPDF` to get started on reading in a pdf document.
+In installed the `pdftools` package to get this going.
+
+Here's the code:
+```{r tm-intro}
+uri <- paste0("file://",system.file(file.path("doc", "tm.pdf"), package = "tm"))
+engine <- "pdftools"
+reader <- readPDF(engine)
+pdf <- reader(elem = list(uri = uri), language = "en", id = "id1")
+cat(content(pdf)[1])
+temp = VCorpus(URISource(uri, mode = ""), readerControl = list(reader = readPDF(engine)))
+```
+
+
+Next I apply this to a set of pdf of my papers (in an external directory as I don't
+want to include these in the repo). Some of the pdfs seems to have non-standard entries and throw errors in readPDF. To avoid this causing problems when
+knitting I wrapped it in a `try` statement; as a result these pdfs will not be
+included. I don't know which pdfs are causing the problems for now.
+(To assess which pdfs are causing problems it might be
+helpful to note the following code can read in a pdf
+`txt <- pdftools::pdf_text("data/my_pubs/s41588-021-00873-4.pdf")`
+
+
+
+```{r}
+#my_corpus <- VCorpus(DirSource("/Users/stephens/git/ds_text_analysis/data/my_pubs", pattern = ".pdf"), readerControl = list(reader = readPDF))
+try(my_corpus <- VCorpus(DirSource("/Users/stephens/Library/CloudStorage/Box-Box/stephens_papers", pattern = ".pdf"), readerControl = list(reader = readPDF)), outFile = stdout())
+summary(my_corpus)
+# writeLines(as.character(my_corpus[[1]])) # creates a lot of output but can be useful to inspect contents of a document interactively....
+```
+
+
+We can get a document-term matrix usign DocumentTermMatrix:
+```{r}
+dtm <- DocumentTermMatrix(my_corpus)
+inspect(dtm[,2000:2005])
+```
+
+
+# Cleaning
+
+It is clear we are going to want to clean up the documents - eg remove stop words, punctuation, etc. 
+I'm using some of the steps used here: https://eight2late.wordpress.com/2015/05/27/a-gentle-introduction-to-text-mining-using-r/
+as a starting point.
+
+I'm transforming to lower case, removing numbers and punctuation, removing stop words.
+
+```{r}
+
+getTransformations()
+cleaned_corpus <- my_corpus %>% 
+    tm_map(stripWhitespace) %>% 
+    tm_map(content_transformer(tolower)) %>% 
+    tm_map(removeNumbers) %>% 
+    tm_map(removePunctuation) %>% 
+    tm_map(removeWords, stopwords("en"))
+
+
+dtm_cleaned <- DocumentTermMatrix(cleaned_corpus)
+inspect(dtm_cleaned[,2000:2020])
+```
+
+# Stemming
+
+I'm not experienced engough to know how important stemming will be here but
+here is a simple stemmer:
+```{r}
+stemmed_corpus <-  cleaned_corpus %>% tm_map(stemDocument)
+dtm_cleaned_stemmed <- DocumentTermMatrix(stemmed_corpus)
+inspect(dtm_cleaned_stemmed[,2000:2020])
+```
+
+# Simple manipulation
+
+```{r}
+freq <- colSums(as.matrix(dtm_cleaned))
+doc_len <- rowSums(as.matrix(dtm_cleaned_stemmed))
+head(sort(freq,decreasing = TRUE),n=20)
+head(doc_len)
+```
+
+# Save dtm matrices
+
+```{r}
+write.csv(as.matrix(dtm_cleaned),"data/dtm_cleaned.csv")
+write.csv(as.matrix(dtm_cleaned),"data/dtm_cleaned_stemmed.csv")
+saveRDS(dtm_cleaned,"data/dtm_cleaned.rds")
+saveRDS(dtm_cleaned_stemmed,"data/dtm_cleaned_stemmed.rds")
+```
+
+
