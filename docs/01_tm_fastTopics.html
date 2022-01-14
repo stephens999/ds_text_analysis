@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Matthew Stephens" />
+
+<meta name="date" content="2021-12-31" />
+
+<title>01_tm_fastTopics</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ds_text_analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">01_tm_fastTopics</h1>
+<h4 class="author">Matthew Stephens</h4>
+<h4 class="date">2021-12-31</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-01-14
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>ds_text_analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211214code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211214)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211214code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211214)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephens999dstextanalysistreece33cac86778eb2cf9154a34d68927f6e1412142targetblankce33caca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephens999/ds_text_analysis/tree/ce33cac86778eb2cf9154a34d68927f6e1412142" target="_blank">ce33cac</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephens999dstextanalysistreece33cac86778eb2cf9154a34d68927f6e1412142targetblankce33caca" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/stephens999/ds_text_analysis/tree/ce33cac86778eb2cf9154a34d68927f6e1412142" target="_blank">ce33cac</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
+    Ignored:    data/dtm_cleaned.csv
+    Ignored:    data/dtm_cleaned_stemmed.csv
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/01_tm_fastTopics.Rmd</code>) and HTML (<code>docs/01_tm_fastTopics.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/ce33cac86778eb2cf9154a34d68927f6e1412142/analysis/01_tm_fastTopics.Rmd" target="_blank">ce33cac</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+<td>
+workflowr::wflow_publish(“analysis/01_tm_fastTopics.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(tm)</code></pre>
+<pre><code>Loading required package: NLP</code></pre>
+<pre class="r"><code>library(fastTopics)
+library(Matrix)</code></pre>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>I’m going to try to apply fastTopics to my document term matrices (dtms) created <a href="00_tm.html">here</a>.</p>
+</div>
+<div id="read-in-data-dtms" class="section level1">
+<h1>Read in data (dtms)</h1>
+<pre class="r"><code>dtm_cleaned = readRDS(&quot;data/dtm_cleaned.rds&quot;)
+dtm_cleaned_stemmed = readRDS(&quot;data/dtm_cleaned_stemmed.rds&quot;)</code></pre>
+</div>
+<div id="apply-fasttopics" class="section level1">
+<h1>Apply fastTopics</h1>
+<pre class="r"><code>X = Matrix(as.matrix(dtm_cleaned_stemmed)) # creates a sparse matrix
+dim(X)</code></pre>
+<pre><code>[1]   126 34471</code></pre>
+<pre class="r"><code>X &lt;- X[,colSums(X &gt; 0) &gt; 0]
+
+
+# Run 10 EM updates to find a good initialization.
+fit0 &lt;- fit_poisson_nmf(X,k = 10,numiter = 10)</code></pre>
+<pre><code>Using 8 RcppParallel threads.</code></pre>
+<pre><code>Initializing factors using Topic SCORE algorithm.
+Initializing loadings by running 10 SCD updates.</code></pre>
+<pre><code>Using 8 RcppParallel threads.</code></pre>
+<pre><code>Fitting rank-10 Poisson NMF to 126 x 34471 sparse matrix.
+Running 10 SCD updates, without extrapolation (fastTopics 0.6-74).</code></pre>
+<pre class="r"><code># Fit the Poisson NMF model by running 50 EM updates.
+fit_em &lt;- fit_poisson_nmf(X,fit0 = fit0,numiter = 50,method = &quot;em&quot;)</code></pre>
+<pre><code>Using 8 RcppParallel threads.</code></pre>
+<pre><code>Fitting rank-10 Poisson NMF to 126 x 34471 sparse matrix.
+Running 50 EM updates, without extrapolation (fastTopics 0.6-74).</code></pre>
+<pre class="r"><code># Fit the Poisson NMF model by running 50 extrapolated SCD updates.
+fit_scd &lt;- fit_poisson_nmf(X,fit0 = fit0,numiter = 50,method = &quot;scd&quot;,
+                           control = list(extrapolate = TRUE))</code></pre>
+<pre><code>Using 8 RcppParallel threads.</code></pre>
+<pre><code>Fitting rank-10 Poisson NMF to 126 x 34471 sparse matrix.
+Running 50 SCD updates, with extrapolation (fastTopics 0.6-74).</code></pre>
+<pre class="r"><code>fit_multinom &lt;- poisson2multinom(fit_scd)</code></pre>
+</div>
+<div id="plot-structure-plots" class="section level1">
+<h1>Plot structure plots</h1>
+<pre class="r"><code>topic_colors &lt;- c(&quot;skyblue&quot;,&quot;forestgreen&quot;,&quot;darkmagenta&quot;,&quot;dodgerblue&quot;,
+                  &quot;gold&quot;,&quot;darkorange&quot;,&quot;red&quot;,&quot;pink&quot;,&quot;brown&quot;,&quot;black&quot;)
+structure_plot(fit_multinom,colors=topic_colors,topics = 1:10,gap = 25)</code></pre>
+<pre><code>Perplexity automatically changed to 40 because original setting of 100 was too large for the number of samples (126)</code></pre>
+<pre><code>Read the 126 x 10 data matrix successfully!
+Using no_dims = 1, perplexity = 40.000000, and theta = 0.100000
+Computing input similarities...
+Building tree...
+Done in 0.00 seconds (sparsity = 0.989922)!
+Learning embedding...
+Iteration 50: error is 47.951993 (50 iterations in 0.01 seconds)
+Iteration 100: error is 46.929540 (50 iterations in 0.01 seconds)
+Iteration 150: error is 48.620917 (50 iterations in 0.01 seconds)
+Iteration 200: error is 47.747181 (50 iterations in 0.01 seconds)
+Iteration 250: error is 48.786274 (50 iterations in 0.01 seconds)
+Iteration 300: error is 1.240050 (50 iterations in 0.00 seconds)
+Iteration 350: error is 0.979199 (50 iterations in 0.00 seconds)
+Iteration 400: error is 0.976286 (50 iterations in 0.00 seconds)
+Iteration 450: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 500: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 550: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 600: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 650: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 700: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 750: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 800: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 850: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 900: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 950: error is 0.976284 (50 iterations in 0.00 seconds)
+Iteration 1000: error is 0.976284 (50 iterations in 0.00 seconds)
+Fitting performed in 0.09 seconds.</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="examine-topics" class="section level1">
+<h1>Examine Topics</h1>
+<p>The structure plot shows that the results are pretty “clustered” with most documents being a strong mmeber of only one topic. Here we will look at each topic – the keywords and the documents that are members of each topic.</p>
+<div id="get-keywords" class="section level2">
+<h2>Get keywords</h2>
+<p>Here we try the de analysis to identify keywords:</p>
+<pre class="r"><code>#in vignette the function is diff_count_analysis. which is right? maybe we should have
+# get_keywords function?
+dfa_out &lt;- de_analysis(fit_multinom,X)</code></pre>
+<pre><code>Fitting 34471 Poisson models with k=10 using method=&quot;scd&quot;.
+Computing log-fold change statistics from 34471 Poisson models with k=10.
+Stabilizing posterior log-fold change estimates using adaptive shrinkage.</code></pre>
+<p>My version of fastTopics is apparently not up to date and I am on a plane so can’t update it, so I just try to find key genes using the posterior mean of the lfc estimates.</p>
+<pre class="r"><code>#prints words with highest posterior mean of log fold change
+# To ease interpretation I only look at &quot;enriched&quot; words here, not depleted words.
+print_keywords = function(i){
+  o = order(dfa_out$postmean[,i],decreasing=TRUE)
+  print(colnames(X)[o[1:20]])
+}</code></pre>
+</div>
+<div id="topic-1" class="section level2">
+<h2>Topic 1</h2>
+<p>A look at the topic 1 membership proportions. This topic seems to capture empirical eQTL studies, particularly involving baboon.</p>
+<pre class="r"><code>plot(fit_multinom$L[,1])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,1]&gt;0.9)</code></pre>
+<pre><code>                                                                                                      elife-33084-v2.pdf 
+                                                                                                                      35 
+                                                                                                      elife-57345-v2.pdf 
+                                                                                                                      36 
+Global Ecology and Biogeography - 2021 - White - Dispersal syndromes drive the formation of biogeographical regions .pdf 
+                                                                                                                      51 </code></pre>
+<pre class="r"><code>print_keywords(1)</code></pre>
+<pre><code> [1] &quot;silenc&quot;          &quot;httpsdoiorgelif&quot; &quot;hypoxia&quot;         &quot;biota&quot;          
+ [5] &quot;dar&quot;             &quot;oxygen&quot;          &quot;hkme&quot;            &quot;realm&quot;          
+ [9] &quot;ward&quot;            &quot;sulawesi&quot;        &quot;climat&quot;          &quot;wallace’&quot;       
+[13] &quot;cardiomyocyt&quot;    &quot;reoxygen&quot;        &quot;banovich&quot;        &quot;krabznf&quot;        
+[17] &quot;ipsccm&quot;          &quot;bird&quot;            &quot;biogeograph&quot;     &quot;transpos&quot;       </code></pre>
+</div>
+<div id="topic-2" class="section level2">
+<h2>Topic 2</h2>
+<p>Topic 2 is also a set of empirical studies. The elife papers (both Ward et al) make sense to cluster together, but why they cluster with the White et al is unclear. The key words include author names (Ward, Banovich) and an elife indicator. (One would kind of prefer a “factor” for elife to get extracted on its own…)</p>
+<pre class="r"><code>plot(fit_multinom$L[,2])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,2]&gt;0.9)</code></pre>
+<pre><code>                 barreiro2010.pdf                  Blekhman2010.pdf 
+                               22                                26 
+               elife-04729-v1.pdf               gb-2012-13-1-r7.pdf 
+                               34                                46 
+Genome Res.-2012-Perry-602-10.pdf                      luca2013.pdf 
+                               49                                66 
+               maranville2011.pdf                Maranville2012.pdf 
+                               68                                69 
+                  Marioni2008.pdf                       pai2012.pdf 
+                               71                                76 
+                 Pickrell2010.pdf                 Veyrieras2008.pdf 
+                               78                               119 
+                Veyrieras2012.pdf 
+                              120 </code></pre>
+<pre class="r"><code>print_keywords(2)</code></pre>
+<pre><code> [1] &quot;eqtn&quot;           &quot;exon&quot;           &quot;baboon&quot;         &quot;gcs&quot;           
+ [5] &quot;lps&quot;            &quot;probe&quot;          &quot;nfkb&quot;           &quot;glucocorticoid&quot;
+ [9] &quot;decay&quot;          &quot;lemur&quot;          &quot;monocyt&quot;        &quot;lane&quot;          
+[13] &quot;spring&quot;         &quot;harbor&quot;         &quot;nonhuman&quot;       &quot;junction&quot;      
+[17] &quot;gcon&quot;           &quot;interact&quot;       &quot;array&quot;          &quot;illumina&quot;      </code></pre>
+</div>
+<div id="topic-3" class="section level2">
+<h2>Topic 3</h2>
+<p>Topic 3 is more empirical studies, several in Nature Genetics. It includes the Schor et al paper on CAGE and the Zhang et al paper on m6a, as well as the Hellmuth-Kim et al GTEX paper on interacting qtls. There are fewer documents with strong membership so i dropped the cutoff ot 0.8.</p>
+<pre class="r"><code>plot(fit_multinom$L[,3])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,3]&gt;0.8)</code></pre>
+<pre><code>       2106.13634.pdf s41588-018-0268-8.pdf s41588-020-0631-4.pdf 
+                   14                    93                    94 
+s41588-020-0644-z.pdf   science.aaz8528.pdf          Shim2015.pdf 
+                   95                   101                   103 
+      turchin2019.pdf 
+                  118 </code></pre>
+<pre class="r"><code>print_keywords(3)</code></pre>
+<pre><code> [1] &quot;ieqtl&quot;                   &quot;multiseq&quot;               
+ [3] &quot;mash&quot;                    &quot;isqtl&quot;                  
+ [5] &quot;pleiotropi&quot;              &quot;waveletbas&quot;             
+ [7] &quot;coloc&quot;                   &quot;qtl&quot;                    
+ [9] &quot;rbps&quot;                    &quot;rbp&quot;                    
+[11] &quot;qtls&quot;                    &quot;βmj&quot;                    
+[13] &quot;wwwnaturecomnaturegenet&quot; &quot;iqtl&quot;                   
+[15] &quot;reanalysi&quot;               &quot;dsqtls&quot;                 
+[17] &quot;shim&quot;                    &quot;sqtls&quot;                  
+[19] &quot;tissu&quot;                   &quot;share&quot;                  </code></pre>
+</div>
+<div id="topic-4" class="section level2">
+<h2>Topic 4</h2>
+<p>Topic 4 captures a diverse set of papers - workflowr(!) and msCentipede; proteomics with Li et al, the EDLogo paper (which seems to appear twice, as dey2007.pdf and s12859-018-2489-3.pdf?); and the Morrison et al MR paper. Some of these seem to be driven by workflowr use, but why the proteomics papers go here i do not know. (Maybe they would get their own topic if we used more topics….)</p>
+<pre class="r"><code>plot(fit_multinom$L[,4])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,4]&gt;0.9)</code></pre>
+<pre><code>            bty779.pdf             Fu2010.pdf             fu2012.pdf 
+                    27                     43                     44 
+            Li2010.pdf             li2012.pdf            Raj2015.pdf 
+                    63                     64                     83 
+           Raj2016.pdf  s12859-018-2489-3.pdf s41467-019-11284-9.pdf 
+                    84                     87                     92 
+     Shiraishi2015.pdf 
+                   105 </code></pre>
+<pre class="r"><code>print_keywords(4)</code></pre>
+<pre><code> [1] &quot;peptid&quot;     &quot;spectra&quot;    &quot;mcds&quot;       &quot;lethal&quot;     &quot;dnmt&quot;      
+ [6] &quot;daughter&quot;   &quot;mscentiped&quot; &quot;drivermap&quot;  &quot;dnmts&quot;      &quot;triplet&quot;   
+[11] &quot;prs&quot;        &quot;signatur&quot;   &quot;edlogo&quot;     &quot;cage&quot;       &quot;logo&quot;      
+[16] &quot;rpf&quot;        &quot;tssqtls&quot;    &quot;uacd&quot;       &quot;charg&quot;      &quot;strand&quot;    </code></pre>
+</div>
+<div id="topic-5" class="section level2">
+<h2>Topic 5</h2>
+<p>Topic 5 picks out the two large-scale GWAS enrichment studies. A nice topic!</p>
+<pre class="r"><code>plot(fit_multinom$L[,5])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,5]&gt;0.9)</code></pre>
+<pre><code>        barber2010.pdf     carbonetto2013.pdf           hart2012.pdf 
+                    21                     29                     55 
+        Reiner2008.pdf s41467-018-06805-x.pdf          shim2015b.pdf 
+                    85                     90                    104 </code></pre>
+<pre class="r"><code>print_keywords(5)</code></pre>
+<pre><code> [1] &quot;subfract&quot;    &quot;ldlc&quot;        &quot;gatm&quot;        &quot;pathway&quot;     &quot;statin&quot;     
+ [6] &quot;princ&quot;       &quot;cetp&quot;        &quot;mhc&quot;         &quot;parc&quot;        &quot;chs&quot;        
+[11] &quot;plasma&quot;      &quot;cdh&quot;         &quot;idl&quot;         &quot;cap&quot;         &quot;priorit&quot;    
+[16] &quot;drug&quot;        &quot;rsse&quot;        &quot;simvastatin&quot; &quot;apo&quot;         &quot;session&quot;    </code></pre>
+</div>
+<div id="topic-6" class="section level2">
+<h2>Topic 6</h2>
+<p>Topic 6 picks out the elephant-related papers as well as some more pop-gen related papers. It seems again that more than one topic has been merged… probably because I used too few topics.</p>
+<pre class="r"><code>plot(fit_multinom$L[,6])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,6]&gt;0.9)</code></pre>
+<pre><code>1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf 
+                                                             2 
+                                             g3journal0457.pdf 
+                                                            45 
+                                              genetics0789.pdf 
+                                                            47 
+                                                 Howie2012.pdf 
+                                                            59 
+                                              Marchini2006.pdf 
+                                                            70 
+                                                Scheet2006.pdf 
+                                                            98 
+                                                Scheet2008.pdf 
+                                                            99 
+                                             Stephens2003a.pdf 
+                                                           112 
+                                              Stephens2005.pdf 
+                                                           114 </code></pre>
+<pre class="r"><code>print_keywords(6)</code></pre>
+<pre><code> [1] &quot;workflowr&quot;   &quot;khap&quot;        &quot;hap&quot;         &quot;git&quot;         &quot;niu&quot;        
+ [6] &quot;updog&quot;       &quot;ldbase&quot;      &quot;scheet&quot;      &quot;trio&quot;        &quot;rmd&quot;        
+[11] &quot;prephas&quot;     &quot;fastphas&quot;    &quot;lotyp&quot;       &quot;gmb&quot;         &quot;wwwajhgorg&quot; 
+[16] &quot;discrep&quot;     &quot;beagl&quot;       &quot;imput&quot;       &quot;wphase&quot;      &quot;reconstruct&quot;</code></pre>
+</div>
+<div id="topic-7" class="section level2">
+<h2>Topic 7</h2>
+<p>Topic 7 covers papers on methods development for GWAS, including BSLMM, BVSR, varbvs, GEMMA, and mulivariate GWAS. Also quite nice topic.</p>
+<pre class="r"><code>plot(fit_multinom$L[,7])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,7]&gt;0.9)</code></pre>
+<pre><code>  027.082.0408.pdf    alasadi2019.pdf       Basu2010.pdf    Falush2003a.pdf 
+                 1                 19                 23                 38 
+   Falush2003b.pdf     Falush2007.pdf     Hubisz2009.pdf   Novembre2008.pdf 
+                39                 40                 60                 74 
+ Novembre2008b.pdf    Petkova2016.pdf Pritchard2000a.pdf Pritchard2000b.pdf 
+                75                 77                 79                 80 
+       raj2014.pdf 
+                82 </code></pre>
+<pre class="r"><code>print_keywords(7)</code></pre>
+<pre><code> [1] &quot;eem&quot;          &quot;admixtur&quot;     &quot;deme&quot;         &quot;psc&quot;          &quot;faststructur&quot;
+ [6] &quot;europ&quot;        &quot;coffe&quot;        &quot;migrat&quot;       &quot;pca&quot;          &quot;admix&quot;       
+[11] &quot;strat&quot;        &quot;falush&quot;       &quot;tdt&quot;          &quot;plk&quot;          &quot;novembr&quot;     
+[16] &quot;ptm&quot;          &quot;subpopul&quot;     &quot;fst&quot;          &quot;isol&quot;         &quot;structur&quot;    </code></pre>
+</div>
+<div id="topic-8" class="section level2">
+<h2>Topic 8</h2>
+<p>Topic 8 covers papers on non-GWAS methods development, particularly centered around ash and RUV.</p>
+<pre class="r"><code>plot(fit_multinom$L[,8])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,8]&gt;0.9)</code></pre>
+<pre><code>              1709.06597.pdf    2012_Zhou&amp;Stephens_NG.pdf 
+                           4                            9 
+        2013_Zhouetal_PG.pdf    2014_Zhou&amp;Stephens_NM.pdf 
+                          10                           11 
+2021.11.03.467167v1.full.pdf            501114v4.full.pdf 
+                          12                           17 
+        AOAS0912-021R2A0.pdf           Carbonetto2012.pdf 
+                          20                           28 
+            Stephens2009.pdf             stephens2013.pdf 
+                         116                          117 
+         WenStephens2014.pdf                  Zhu2017.pdf 
+                         125                          126 </code></pre>
+<pre class="r"><code>print_keywords(8)</code></pre>
+<pre><code> [1] &quot;bslmm&quot;        &quot;varbv&quot;        &quot;css&quot;          &quot;ibss&quot;         &quot;●●●&quot;         
+ [6] &quot;eﬀect&quot;        &quot;susierss&quot;     &quot;subgroup&quot;     &quot;susiesuff&quot;    &quot;rpg&quot;         
+[11] &quot;gemma&quot;        &quot;lasso&quot;        &quot;bvsr&quot;         &quot;dapg&quot;         &quot;variabl&quot;     
+[16] &quot;hyperparamet&quot; &quot;susi&quot;         &quot;qtn&quot;          &quot;pve&quot;          &quot;ser&quot;         </code></pre>
+</div>
+<div id="topic-9" class="section level2">
+<h2>Topic 9</h2>
+<p>Topic 9 covers papers on structure and EEMS. Also a nice topic.</p>
+<pre class="r"><code>plot(fit_multinom$L[,9])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,9]&gt;0.9)</code></pre>
+<pre><code>    Crawford2004.pdf  Hellenthal2006a.pdf  Hellenthal2006b.pdf 
+                  30                   56                   57 
+  Hellenthal2007.pdf           Li2003.pdf       Mondol2015.pdf 
+                  58                   62                   72 
+          msy006.pdf Roychoudhury2007.pdf         step0444.pdf 
+                  73                   86                  106 
+   Stephens2000a.pdf    Stephens2000d.pdf    Stephens2003b.pdf 
+                 107                  110                  113 
+      Wasser2004.pdf       Wasser2007.pdf       Wasser2008.pdf 
+                 121                  122                  123 </code></pre>
+<pre class="r"><code>print_keywords(9)</code></pre>
+<pre><code> [1] &quot;hot&quot;         &quot;tusk&quot;        &quot;ivori&quot;       &quot;mrca&quot;        &quot;asg&quot;        
+ [6] &quot;crossov&quot;     &quot;seizur&quot;      &quot;kuhner&quot;      &quot;poach&quot;       &quot;trade&quot;      
+[11] &quot;sperm&quot;       &quot;tavare\020&quot;  &quot;tmrca&quot;       &quot;genealog&quot;    &quot;gri\u0081th&quot;
+[16] &quot;hotspot&quot;     &quot;wasser&quot;      &quot;tavareâ&quot;     &quot;tap&quot;         &quot;griffith&quot;   </code></pre>
+</div>
+<div id="topic-10" class="section level2">
+<h2>Topic 10</h2>
+<p>Topic 10 covers papers on haplotypes and recombination. Also some imputation. Another nice topic.</p>
+<pre class="r"><code>plot(fit_multinom$L[,10])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>which(fit_multinom$L[,10]&gt;0.9)</code></pre>
+<pre><code>                                                                                                      1705.08393.pdf 
+                                                                                                                   3 
+                                                                                                      1812.07488.pdf 
+                                                                                                                   5 
+                                                                                                          19-042.pdf 
+                                                                                                                   6 
+                                                                                                      1901.10679.pdf 
+                                                                                                                   7 
+                                                                                                          20-589.pdf 
+                                                                                                                   8 
+                                                                                                      2105.13440.pdf 
+                                                                                                                  13 
+                                                                                                      2110.00152.pdf 
+                                                                                                                  15 
+                                                                                                   368316v2.full.pdf 
+                                                                                                                  16 
+A Fast Algorithm for Maximum Likelihood Estimation of Mixture Proportions Using Sequential Quadratic Programming.pdf 
+                                                                                                                  18 
+                                                                                                  biosts_21_1_15.pdf 
+                                                                                                                  25 
+                                                                                                    Gottardo2006.pdf 
+                                                                                                                  52 
+                                                                                                          kxw041.pdf 
+                                                                                                                  61 
+                                                                                                lu-stephens-2016.pdf 
+                                                                                                                  65 </code></pre>
+<pre class="r"><code>print_keywords(10)</code></pre>
+<pre><code> [1] &quot;ebnm&quot;          &quot;ruv&quot;           &quot;nmf&quot;           &quot;smash&quot;        
+ [5] &quot;scrnaseq&quot;      &quot;gom&quot;           &quot;efron&quot;         &quot;unimod&quot;       
+ [9] &quot;ebmf&quot;          &quot;gagnonbartsch&quot; &quot;imag&quot;          &quot;nonparametr&quot;  
+[13] &quot;cashr&quot;         &quot;limmar&quot;        &quot;vash&quot;          &quot;johnston&quot;     
+[17] &quot;solv&quot;          &quot;nonneg&quot;        &quot;topic&quot;         &quot;runtim&quot;       </code></pre>
+</div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<p>The results include some nice topics. But it feels like maybe some things that are different topics have been merged, or sometimes it is just forced to put things together that don’t have very much in common. It would be good to try a larger K.</p>
+<p>I haven’t looked much at the “admixed” papers, but a general feature of the results is that the papers are quite clustered, which is both consistent with my general experience of these models, and at the same time a bit problematic when one considers the goal of topic modelling to identify cross-cutting themes and multi-topic documents.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 Patched (2021-07-20 r80657)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Monterey 12.0.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] Matrix_1.3-4      fastTopics_0.6-74 tm_0.7-8          NLP_0.2-1        
+[5] workflowr_1.7.0  
+
+loaded via a namespace (and not attached):
+  [1] Rtsne_0.15           colorspace_2.0-2     ellipsis_0.3.2      
+  [4] class_7.3-19         rprojroot_2.0.2      fs_1.5.0            
+  [7] rstudioapi_0.13      farver_2.1.0         listenv_0.8.0       
+ [10] MatrixModels_0.5-0   ggrepel_0.9.1        prodlim_2019.11.13  
+ [13] fansi_0.5.0          lubridate_1.8.0      xml2_1.3.2          
+ [16] codetools_0.2-18     splines_4.1.0        knitr_1.36          
+ [19] jsonlite_1.7.2       pROC_1.18.0          mcmc_0.9-7          
+ [22] caret_6.0-90         ashr_2.2-47          compiler_4.1.0      
+ [25] httr_1.4.2           assertthat_0.2.1     fastmap_1.1.0       
+ [28] lazyeval_0.2.2       later_1.3.0          prettyunits_1.1.1   
+ [31] htmltools_0.5.2      quantreg_5.86        tools_4.1.0         
+ [34] coda_0.19-4          gtable_0.3.0         glue_1.5.0          
+ [37] reshape2_1.4.4       dplyr_1.0.7          Rcpp_1.0.7          
+ [40] slam_0.1-49          jquerylib_0.1.4      vctrs_0.3.8         
+ [43] nlme_3.1-153         conquer_1.2.1        iterators_1.0.13    
+ [46] timeDate_3043.102    gower_0.2.2          xfun_0.28           
+ [49] stringr_1.4.0        globals_0.14.0       ps_1.6.0            
+ [52] lifecycle_1.0.1      irlba_2.3.3          future_1.23.0       
+ [55] getPass_0.2-2        MASS_7.3-54          scales_1.1.1        
+ [58] ipred_0.9-12         hms_1.1.1            promises_1.2.0.1    
+ [61] parallel_4.1.0       SparseM_1.81         yaml_2.2.1          
+ [64] pbapply_1.5-0        ggplot2_3.3.5        rpart_4.1-15        
+ [67] stringi_1.7.5        SQUAREM_2021.1       highr_0.9           
+ [70] foreach_1.5.1        lava_1.6.10          truncnorm_1.0-8     
+ [73] rlang_0.4.12         pkgconfig_2.0.3      matrixStats_0.61.0  
+ [76] evaluate_0.14        lattice_0.20-45      invgamma_1.1        
+ [79] purrr_0.3.4          labeling_0.4.2       recipes_0.1.17      
+ [82] htmlwidgets_1.5.4    cowplot_1.1.1        processx_3.5.2      
+ [85] tidyselect_1.1.1     parallelly_1.29.0    plyr_1.8.6          
+ [88] magrittr_2.0.1       R6_2.5.1             generics_0.1.1      
+ [91] DBI_1.1.1            pillar_1.6.4         whisker_0.4         
+ [94] withr_2.4.2          survival_3.2-13      mixsqp_0.3-43       
+ [97] nnet_7.3-16          tibble_3.1.6         future.apply_1.8.1  
+[100] crayon_1.4.2         utf8_1.2.2           plotly_4.10.0       
+[103] rmarkdown_2.11       progress_1.2.2       grid_4.1.0          
+[106] data.table_1.14.2    callr_3.7.0          git2r_0.29.0        
+[109] ModelMetrics_1.2.2.2 digest_0.6.28        tidyr_1.1.4         
+[112] httpuv_1.6.3         MCMCpack_1.6-0       RcppParallel_5.1.4  
+[115] stats4_4.1.0         munsell_0.5.0        viridisLite_0.4.0   
+[118] quadprog_1.5-8      </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
