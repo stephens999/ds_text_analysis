@@ -1,0 +1,202 @@
+---
+title: "01_tm_fastTopics"
+author: "Matthew Stephens"
+date: "2021-12-31"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r}
+library(tm)
+library(fastTopics)
+library(Matrix)
+```
+
+# Introduction
+
+I'm going to try to apply fastTopics to my document term matrices (dtms) created
+[here](00_tm.html).
+
+# Read in data (dtms)
+
+```{r}
+dtm_cleaned = readRDS("data/dtm_cleaned.rds")
+dtm_cleaned_stemmed = readRDS("data/dtm_cleaned_stemmed.rds")
+```
+
+# Apply fastTopics
+
+```{r}
+X = Matrix(as.matrix(dtm_cleaned_stemmed)) # creates a sparse matrix
+dim(X)
+X <- X[,colSums(X > 0) > 0]
+
+
+# Run 10 EM updates to find a good initialization.
+fit0 <- fit_poisson_nmf(X,k = 10,numiter = 10)
+
+# Fit the Poisson NMF model by running 50 EM updates.
+fit_em <- fit_poisson_nmf(X,fit0 = fit0,numiter = 50,method = "em")
+
+# Fit the Poisson NMF model by running 50 extrapolated SCD updates.
+fit_scd <- fit_poisson_nmf(X,fit0 = fit0,numiter = 50,method = "scd",
+                           control = list(extrapolate = TRUE))
+
+fit_multinom <- poisson2multinom(fit_scd)
+```
+
+# Plot structure plots
+
+```{r}
+topic_colors <- c("skyblue","forestgreen","darkmagenta","dodgerblue",
+                  "gold","darkorange","red","pink","brown","black")
+structure_plot(fit_multinom,colors=topic_colors,topics = 1:10,gap = 25)
+```
+
+# Examine Topics
+
+The structure plot shows that the results are pretty "clustered" with
+most documents being a strong mmeber of only one topic. Here we 
+will look at each topic -- the keywords and the documents that are 
+members of each topic.
+
+## Get keywords
+
+Here we try the de analysis to identify keywords:
+```{r}
+#in vignette the function is diff_count_analysis. which is right? maybe we should have
+# get_keywords function?
+dfa_out <- de_analysis(fit_multinom,X)
+```
+
+My version of fastTopics is apparently not up to date and I am on a plane so can't update it, so I just try to find key genes using the posterior mean of the lfc estimates.
+
+```{r}
+#prints words with highest posterior mean of log fold change
+# To ease interpretation I only look at "enriched" words here, not depleted words.
+print_keywords = function(i){
+  o = order(dfa_out$postmean[,i],decreasing=TRUE)
+  print(colnames(X)[o[1:20]])
+}
+```
+
+## Topic 1
+
+A look at the topic 1 membership proportions. This topic seems to capture empirical 
+eQTL studies, particularly involving baboon.
+```{r}
+plot(fit_multinom$L[,1])
+which(fit_multinom$L[,1]>0.9)
+print_keywords(1)
+```
+
+
+
+## Topic 2
+
+Topic 2 is also a set of empirical studies. The elife papers (both Ward et al) make sense to cluster together, but why they cluster with the White et al is unclear.
+The key words include author names (Ward, Banovich) and an elife indicator.
+(One would kind of prefer a "factor" for elife to get extracted on its own...)
+
+```{r}
+plot(fit_multinom$L[,2])
+which(fit_multinom$L[,2]>0.9)
+print_keywords(2)
+```
+
+## Topic 3
+
+Topic 3 is more empirical studies, several in Nature Genetics. It includes
+the Schor et al paper on CAGE and the Zhang et al paper on m6a, as well as the Hellmuth-Kim et al GTEX paper on interacting qtls.
+There are fewer documents with strong
+membership so i dropped the cutoff ot 0.8. 
+```{r}
+plot(fit_multinom$L[,3])
+which(fit_multinom$L[,3]>0.8)
+print_keywords(3)
+```
+
+
+## Topic 4
+
+Topic 4 captures a diverse set of papers - workflowr(!) and msCentipede; proteomics with Li et al, the EDLogo paper (which seems to appear twice, as dey2007.pdf and s12859-018-2489-3.pdf?); and the Morrison et al MR paper. Some of these seem to be
+driven by workflowr use, but why the proteomics papers go here i do not know. (Maybe they would get their own topic if we used more topics....)
+```{r}
+plot(fit_multinom$L[,4])
+which(fit_multinom$L[,4]>0.9)
+print_keywords(4)
+```
+
+
+## Topic 5
+
+Topic 5 picks out the two large-scale GWAS enrichment studies. 
+A nice topic!
+```{r}
+plot(fit_multinom$L[,5])
+which(fit_multinom$L[,5]>0.9)
+print_keywords(5)
+```
+
+## Topic 6
+
+Topic 6 picks out the elephant-related papers as well as some more pop-gen related papers. It seems again that more than one topic has been merged... probably because
+I used too few topics.
+```{r}
+plot(fit_multinom$L[,6])
+which(fit_multinom$L[,6]>0.9)
+print_keywords(6)
+```
+
+## Topic 7
+
+Topic 7 covers papers on methods development for GWAS, including
+BSLMM, BVSR, varbvs, GEMMA, and mulivariate GWAS. Also quite nice topic.
+```{r}
+plot(fit_multinom$L[,7])
+which(fit_multinom$L[,7]>0.9)
+print_keywords(7)
+```
+
+## Topic 8
+
+Topic 8 covers papers on non-GWAS methods development, particularly centered around ash
+and RUV.
+```{r}
+plot(fit_multinom$L[,8])
+which(fit_multinom$L[,8]>0.9)
+print_keywords(8)
+```
+
+## Topic 9
+
+Topic 9 covers papers on structure and EEMS. Also a nice topic.
+```{r}
+plot(fit_multinom$L[,9])
+which(fit_multinom$L[,9]>0.9)
+print_keywords(9)
+```
+
+## Topic 10
+
+Topic 10 covers papers on haplotypes and recombination. Also some imputation. Another nice topic.
+```{r}
+plot(fit_multinom$L[,10])
+which(fit_multinom$L[,10]>0.9)
+print_keywords(10)
+```
+
+# Summary
+
+The results include some nice topics. But it feels like maybe some
+things that are different topics have been merged, or sometimes it is
+just forced to put things together that don't have very much in common.
+It would be good to try a larger K. 
+
+I haven't looked much at the "admixed" papers, but a general feature of the
+results is that the papers are quite clustered, which is both consistent with
+my general experience of these models, and at the same time a bit problematic when
+one considers the goal of topic modelling to identify cross-cutting themes
+and multi-topic documents.
