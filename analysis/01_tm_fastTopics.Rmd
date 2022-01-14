@@ -22,6 +22,7 @@ I'm going to try to apply fastTopics to my document term matrices (dtms) created
 # Read in data (dtms)
 
 ```{r}
+set.seed(100)
 dtm_cleaned = readRDS("data/dtm_cleaned.rds")
 dtm_cleaned_stemmed = readRDS("data/dtm_cleaned_stemmed.rds")
 ```
@@ -85,10 +86,10 @@ print_keywords = function(i){
 ## Topic 1
 
 A look at the topic 1 membership proportions. This topic seems to capture empirical 
-eQTL studies, particularly involving baboon.
+eQTL studies and RNAseq.
 ```{r}
 plot(fit_multinom$L[,1])
-which(fit_multinom$L[,1]>0.9)
+which(fit_multinom$L[,1]>0.8)
 print_keywords(1)
 ```
 
@@ -102,16 +103,16 @@ The key words include author names (Ward, Banovich) and an elife indicator.
 
 ```{r}
 plot(fit_multinom$L[,2])
-which(fit_multinom$L[,2]>0.9)
+which(fit_multinom$L[,2]>0.8)
 print_keywords(2)
 ```
 
 ## Topic 3
 
-Topic 3 is more empirical studies, several in Nature Genetics. It includes
-the Schor et al paper on CAGE and the Zhang et al paper on m6a, as well as the Hellmuth-Kim et al GTEX paper on interacting qtls.
-There are fewer documents with strong
-membership so i dropped the cutoff ot 0.8. 
+Topic 3 picks out the elephant-related papers as well as some not so closey related papers (eg not clear what Shiraishi, which applies topic models to cancer data, 
+is doing here). It seems that more than one topic has been merged... maybe
+I used too few topics. Author names again show up as keywords.
+
 ```{r}
 plot(fit_multinom$L[,3])
 which(fit_multinom$L[,3]>0.8)
@@ -121,72 +122,70 @@ print_keywords(3)
 
 ## Topic 4
 
-Topic 4 captures a diverse set of papers - workflowr(!) and msCentipede; proteomics with Li et al, the EDLogo paper (which seems to appear twice, as dey2007.pdf and s12859-018-2489-3.pdf?); and the Morrison et al MR paper. Some of these seem to be
-driven by workflowr use, but why the proteomics papers go here i do not know. (Maybe they would get their own topic if we used more topics....)
+Topic 4 captures a diverse set of papers - workflowr(!) and msCentipede; proteomics with Li et al, the EDLogo paper (s12859-018-2489-3.pdf). Some of these seem to be
+driven by workflowr use, but why the proteomics papers go here i do not know. Maybe they would get their own topic if we used more topics....
 ```{r}
 plot(fit_multinom$L[,4])
-which(fit_multinom$L[,4]>0.9)
+which(fit_multinom$L[,4]>0.8)
 print_keywords(4)
 ```
 
 
 ## Topic 5
 
-Topic 5 picks out the two large-scale GWAS enrichment studies. 
-A nice topic!
+Topic 5 covers papers on haplotypes and recombination. Also some imputation. A nice topic.
 ```{r}
 plot(fit_multinom$L[,5])
-which(fit_multinom$L[,5]>0.9)
+which(fit_multinom$L[,5]>0.8)
 print_keywords(5)
 ```
 
 ## Topic 6
 
-Topic 6 picks out the elephant-related papers as well as some more pop-gen related papers. It seems again that more than one topic has been merged... probably because
-I used too few topics.
+Topic 6 covers papers on methods development for GWAS, including
+varbvs and susie. 
 ```{r}
 plot(fit_multinom$L[,6])
-which(fit_multinom$L[,6]>0.9)
+which(fit_multinom$L[,6]>0.8)
 print_keywords(6)
 ```
 
 ## Topic 7
 
-Topic 7 covers papers on methods development for GWAS, including
-BSLMM, BVSR, varbvs, GEMMA, and mulivariate GWAS. Also quite nice topic.
+Topic 7 includes papers on population structure and EEMS.
 ```{r}
 plot(fit_multinom$L[,7])
-which(fit_multinom$L[,7]>0.9)
+which(fit_multinom$L[,7]>0.8)
 print_keywords(7)
 ```
 
 ## Topic 8
 
-Topic 8 covers papers on non-GWAS methods development, particularly centered around ash
-and RUV.
+Topic 8 is more "classic" popgen stuff.
 ```{r}
 plot(fit_multinom$L[,8])
-which(fit_multinom$L[,8]>0.9)
+which(fit_multinom$L[,8]>0.8)
 print_keywords(8)
 ```
 
 ## Topic 9
 
-Topic 9 covers papers on structure and EEMS. Also a nice topic.
+Topic 9 includes non-gwas methods development, including RUV and ash.
 ```{r}
 plot(fit_multinom$L[,9])
-which(fit_multinom$L[,9]>0.9)
+which(fit_multinom$L[,9]>0.8)
 print_keywords(9)
 ```
 
 ## Topic 10
 
-Topic 10 covers papers on haplotypes and recombination. Also some imputation. Another nice topic.
+Topic 10 includes large-scale GWAS, BSLMM/LMM as well as multivariate testing.
 ```{r}
 plot(fit_multinom$L[,10])
-which(fit_multinom$L[,10]>0.9)
+which(fit_multinom$L[,10]>0.8)
 print_keywords(10)
 ```
+
 
 # Summary
 
