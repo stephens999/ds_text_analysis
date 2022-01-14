@@ -468,16 +468,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephens999dstextanalysistreece33cac86778eb2cf9154a34d68927f6e1412142targetblankce33caca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephens999/ds_text_analysis/tree/ce33cac86778eb2cf9154a34d68927f6e1412142" target="_blank">ce33cac</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephens999dstextanalysistree9e33de8c6941625ff048adb4621cf6ce2cf93b93targetblank9e33de8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephens999/ds_text_analysis/tree/9e33de8c6941625ff048adb4621cf6ce2cf93b93" target="_blank">9e33de8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephens999dstextanalysistreece33cac86778eb2cf9154a34d68927f6e1412142targetblankce33caca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephens999dstextanalysistree9e33de8c6941625ff048adb4621cf6ce2cf93b93targetblank9e33de8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephens999/ds_text_analysis/tree/ce33cac86778eb2cf9154a34d68927f6e1412142" target="_blank">ce33cac</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephens999/ds_text_analysis/tree/9e33de8c6941625ff048adb4621cf6ce2cf93b93" target="_blank">9e33de8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -486,7 +486,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/dtm_cleaned.csv
     Ignored:    data/dtm_cleaned_stemmed.csv
 
@@ -532,6 +531,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/9e33de8c6941625ff048adb4621cf6ce2cf93b93/analysis/01_tm_fastTopics.Rmd" target="_blank">9e33de8</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+<td>
+workflowr::wflow_publish(“analysis/01_tm_fastTopics.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephens999/ds_text_analysis/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/01_tm_fastTopics.html" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/stephens999/ds_text_analysis/blob/ce33cac86778eb2cf9154a34d68927f6e1412142/analysis/01_tm_fastTopics.Rmd" target="_blank">ce33cac</a>
 </td>
 <td>
@@ -561,7 +594,8 @@ library(Matrix)</code></pre>
 </div>
 <div id="read-in-data-dtms" class="section level1">
 <h1>Read in data (dtms)</h1>
-<pre class="r"><code>dtm_cleaned = readRDS(&quot;data/dtm_cleaned.rds&quot;)
+<pre class="r"><code>set.seed(100)
+dtm_cleaned = readRDS(&quot;data/dtm_cleaned.rds&quot;)
 dtm_cleaned_stemmed = readRDS(&quot;data/dtm_cleaned_stemmed.rds&quot;)</code></pre>
 </div>
 <div id="apply-fasttopics" class="section level1">
@@ -605,28 +639,65 @@ Computing input similarities...
 Building tree...
 Done in 0.00 seconds (sparsity = 0.989922)!
 Learning embedding...
-Iteration 50: error is 47.951993 (50 iterations in 0.01 seconds)
-Iteration 100: error is 46.929540 (50 iterations in 0.01 seconds)
-Iteration 150: error is 48.620917 (50 iterations in 0.01 seconds)
-Iteration 200: error is 47.747181 (50 iterations in 0.01 seconds)
-Iteration 250: error is 48.786274 (50 iterations in 0.01 seconds)
-Iteration 300: error is 1.240050 (50 iterations in 0.00 seconds)
-Iteration 350: error is 0.979199 (50 iterations in 0.00 seconds)
-Iteration 400: error is 0.976286 (50 iterations in 0.00 seconds)
-Iteration 450: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 500: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 550: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 600: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 650: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 700: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 750: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 800: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 850: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 900: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 950: error is 0.976284 (50 iterations in 0.00 seconds)
-Iteration 1000: error is 0.976284 (50 iterations in 0.00 seconds)
-Fitting performed in 0.09 seconds.</code></pre>
+Iteration 50: error is 48.896180 (50 iterations in 0.01 seconds)
+Iteration 100: error is 49.365359 (50 iterations in 0.01 seconds)
+Iteration 150: error is 47.321507 (50 iterations in 0.01 seconds)
+Iteration 200: error is 46.091970 (50 iterations in 0.01 seconds)
+Iteration 250: error is 45.634371 (50 iterations in 0.01 seconds)
+Iteration 300: error is 0.634313 (50 iterations in 0.00 seconds)
+Iteration 350: error is 0.489756 (50 iterations in 0.00 seconds)
+Iteration 400: error is 0.489525 (50 iterations in 0.00 seconds)
+Iteration 450: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 500: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 550: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 600: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 650: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 700: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 750: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 800: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 850: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 900: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 950: error is 0.489524 (50 iterations in 0.00 seconds)
+Iteration 1000: error is 0.489524 (50 iterations in 0.00 seconds)
+Fitting performed in 0.08 seconds.</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-4-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="examine-topics" class="section level1">
 <h1>Examine Topics</h1>
@@ -650,212 +721,525 @@ print_keywords = function(i){
 </div>
 <div id="topic-1" class="section level2">
 <h2>Topic 1</h2>
-<p>A look at the topic 1 membership proportions. This topic seems to capture empirical eQTL studies, particularly involving baboon.</p>
+<p>A look at the topic 1 membership proportions. This topic seems to capture empirical eQTL studies and RNAseq.</p>
 <pre class="r"><code>plot(fit_multinom$L[,1])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,1]&gt;0.9)</code></pre>
-<pre><code>                                                                                                      elife-33084-v2.pdf 
-                                                                                                                      35 
-                                                                                                      elife-57345-v2.pdf 
-                                                                                                                      36 
-Global Ecology and Biogeography - 2021 - White - Dispersal syndromes drive the formation of biogeographical regions .pdf 
-                                                                                                                      51 </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-7-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,1]&gt;0.8)</code></pre>
+<pre><code>   barreiro2010.pdf    Blekhman2010.pdf      degner2012.pdf  elife-04729-v1.pdf 
+                 22                  26                  31                  34 
+gb-2012-13-1-r7.pdf        luca2013.pdf  maranville2011.pdf  Maranville2012.pdf 
+                 46                  66                  68                  69 
+    Marioni2008.pdf         pai2012.pdf    Pickrell2010.pdf   Veyrieras2008.pdf 
+                 71                  76                  78                 119 
+  Veyrieras2012.pdf 
+                120 </code></pre>
 <pre class="r"><code>print_keywords(1)</code></pre>
-<pre><code> [1] &quot;silenc&quot;          &quot;httpsdoiorgelif&quot; &quot;hypoxia&quot;         &quot;biota&quot;          
- [5] &quot;dar&quot;             &quot;oxygen&quot;          &quot;hkme&quot;            &quot;realm&quot;          
- [9] &quot;ward&quot;            &quot;sulawesi&quot;        &quot;climat&quot;          &quot;wallace’&quot;       
-[13] &quot;cardiomyocyt&quot;    &quot;reoxygen&quot;        &quot;banovich&quot;        &quot;krabznf&quot;        
-[17] &quot;ipsccm&quot;          &quot;bird&quot;            &quot;biogeograph&quot;     &quot;transpos&quot;       </code></pre>
+<pre><code> [1] &quot;eqtn&quot;           &quot;baboon&quot;         &quot;probe&quot;          &quot;decay&quot;         
+ [5] &quot;monocyt&quot;        &quot;lane&quot;           &quot;stimul&quot;         &quot;treatment&quot;     
+ [9] &quot;mrna&quot;           &quot;splice&quot;         &quot;social&quot;         &quot;array&quot;         
+[13] &quot;glucocorticoid&quot; &quot;hour&quot;           &quot;exclus&quot;         &quot;immun&quot;         
+[17] &quot;eqtl&quot;           &quot;exon&quot;           &quot;alter&quot;          &quot;highresolut&quot;   </code></pre>
 </div>
 <div id="topic-2" class="section level2">
 <h2>Topic 2</h2>
 <p>Topic 2 is also a set of empirical studies. The elife papers (both Ward et al) make sense to cluster together, but why they cluster with the White et al is unclear. The key words include author names (Ward, Banovich) and an elife indicator. (One would kind of prefer a “factor” for elife to get extracted on its own…)</p>
 <pre class="r"><code>plot(fit_multinom$L[,2])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,2]&gt;0.9)</code></pre>
-<pre><code>                 barreiro2010.pdf                  Blekhman2010.pdf 
-                               22                                26 
-               elife-04729-v1.pdf               gb-2012-13-1-r7.pdf 
-                               34                                46 
-Genome Res.-2012-Perry-602-10.pdf                      luca2013.pdf 
-                               49                                66 
-               maranville2011.pdf                Maranville2012.pdf 
-                               68                                69 
-                  Marioni2008.pdf                       pai2012.pdf 
-                               71                                76 
-                 Pickrell2010.pdf                 Veyrieras2008.pdf 
-                               78                               119 
-                Veyrieras2012.pdf 
-                              120 </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-8-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,2]&gt;0.8)</code></pre>
+<pre><code>               elife-33084-v2.pdf                elife-57345-v2.pdf 
+                               35                                36 
+Genome Res.-2012-Perry-602-10.pdf             s13059-014-0547-3.pdf 
+                               49                                88 </code></pre>
 <pre class="r"><code>print_keywords(2)</code></pre>
-<pre><code> [1] &quot;eqtn&quot;           &quot;exon&quot;           &quot;baboon&quot;         &quot;gcs&quot;           
- [5] &quot;lps&quot;            &quot;probe&quot;          &quot;nfkb&quot;           &quot;glucocorticoid&quot;
- [9] &quot;decay&quot;          &quot;lemur&quot;          &quot;monocyt&quot;        &quot;lane&quot;          
-[13] &quot;spring&quot;         &quot;harbor&quot;         &quot;nonhuman&quot;       &quot;junction&quot;      
-[17] &quot;gcon&quot;           &quot;interact&quot;       &quot;array&quot;          &quot;illumina&quot;      </code></pre>
+<pre><code> [1] &quot;silenc&quot;          &quot;httpsdoiorgelif&quot; &quot;ortholog&quot;        &quot;hypoxia&quot;        
+ [5] &quot;oxygen&quot;          &quot;ward&quot;            &quot;hkme&quot;            &quot;dar&quot;            
+ [9] &quot;lemur&quot;           &quot;cardiomyocyt&quot;    &quot;mark&quot;            &quot;banovich&quot;       
+[13] &quot;reoxygen&quot;        &quot;transpos&quot;        &quot;pol&quot;             &quot;tes&quot;            
+[17] &quot;interspeci&quot;      &quot;ipsccm&quot;          &quot;dynam&quot;           &quot;histon&quot;         </code></pre>
 </div>
 <div id="topic-3" class="section level2">
 <h2>Topic 3</h2>
-<p>Topic 3 is more empirical studies, several in Nature Genetics. It includes the Schor et al paper on CAGE and the Zhang et al paper on m6a, as well as the Hellmuth-Kim et al GTEX paper on interacting qtls. There are fewer documents with strong membership so i dropped the cutoff ot 0.8.</p>
+<p>Topic 3 picks out the elephant-related papers as well as some not so closey related papers (eg not clear what Shiraishi, which applies topic models to cancer data, is doing here). It seems that more than one topic has been merged… maybe I used too few topics. Author names again show up as keywords.</p>
 <pre class="r"><code>plot(fit_multinom$L[,3])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-9-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>which(fit_multinom$L[,3]&gt;0.8)</code></pre>
-<pre><code>       2106.13634.pdf s41588-018-0268-8.pdf s41588-020-0631-4.pdf 
-                   14                    93                    94 
-s41588-020-0644-z.pdf   science.aaz8528.pdf          Shim2015.pdf 
-                   95                   101                   103 
-      turchin2019.pdf 
-                  118 </code></pre>
+<pre><code>            bty779.pdf            dey2007.pdf             Fu2010.pdf 
+                    27                     32                     43 
+            fu2012.pdf         Mondol2015.pdf s41467-019-11284-9.pdf 
+                    44                     72                     92 
+   science.aaz8528.pdf      Shiraishi2015.pdf         Wasser2004.pdf 
+                   101                    105                    121 
+        Wasser2007.pdf         Wasser2008.pdf 
+                   122                    123 </code></pre>
 <pre class="r"><code>print_keywords(3)</code></pre>
-<pre><code> [1] &quot;ieqtl&quot;                   &quot;multiseq&quot;               
- [3] &quot;mash&quot;                    &quot;isqtl&quot;                  
- [5] &quot;pleiotropi&quot;              &quot;waveletbas&quot;             
- [7] &quot;coloc&quot;                   &quot;qtl&quot;                    
- [9] &quot;rbps&quot;                    &quot;rbp&quot;                    
-[11] &quot;qtls&quot;                    &quot;βmj&quot;                    
-[13] &quot;wwwnaturecomnaturegenet&quot; &quot;iqtl&quot;                   
-[15] &quot;reanalysi&quot;               &quot;dsqtls&quot;                 
-[17] &quot;shim&quot;                    &quot;sqtls&quot;                  
-[19] &quot;tissu&quot;                   &quot;share&quot;                  </code></pre>
+<pre><code> [1] &quot;tusk&quot;       &quot;ieqtl&quot;      &quot;ivori&quot;      &quot;gom&quot;        &quot;dnmt&quot;      
+ [6] &quot;multiseq&quot;   &quot;seizur&quot;     &quot;trade&quot;      &quot;poach&quot;      &quot;wildlif&quot;   
+[11] &quot;dnmts&quot;      &quot;illeg&quot;      &quot;wasser&quot;     &quot;genereux&quot;   &quot;bisulfit&quot;  
+[16] &quot;isqtl&quot;      &quot;hemimethyl&quot; &quot;daughter&quot;   &quot;signatur&quot;   &quot;dij&quot;       </code></pre>
 </div>
 <div id="topic-4" class="section level2">
 <h2>Topic 4</h2>
-<p>Topic 4 captures a diverse set of papers - workflowr(!) and msCentipede; proteomics with Li et al, the EDLogo paper (which seems to appear twice, as dey2007.pdf and s12859-018-2489-3.pdf?); and the Morrison et al MR paper. Some of these seem to be driven by workflowr use, but why the proteomics papers go here i do not know. (Maybe they would get their own topic if we used more topics….)</p>
+<p>Topic 4 captures a diverse set of papers - workflowr(!) and msCentipede; proteomics with Li et al, the EDLogo paper (s12859-018-2489-3.pdf). Some of these seem to be driven by workflowr use, but why the proteomics papers go here i do not know. Maybe they would get their own topic if we used more topics….</p>
 <pre class="r"><code>plot(fit_multinom$L[,4])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,4]&gt;0.9)</code></pre>
-<pre><code>            bty779.pdf             Fu2010.pdf             fu2012.pdf 
-                    27                     43                     44 
-            Li2010.pdf             li2012.pdf            Raj2015.pdf 
-                    63                     64                     83 
-           Raj2016.pdf  s12859-018-2489-3.pdf s41467-019-11284-9.pdf 
-                    84                     87                     92 
-     Shiraishi2015.pdf 
-                   105 </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-10-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,4]&gt;0.8)</code></pre>
+<pre><code>1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf 
+                                                             2 
+                             Genome Res.-2020-Hsiao-611-21.pdf 
+                                                            50 
+                                                    Li2010.pdf 
+                                                            63 
+                                                    li2012.pdf 
+                                                            64 
+                                                   Raj2015.pdf 
+                                                            83 
+                                                   Raj2016.pdf 
+                                                            84 
+                                         s12859-018-2489-3.pdf 
+                                                            87 </code></pre>
 <pre class="r"><code>print_keywords(4)</code></pre>
-<pre><code> [1] &quot;peptid&quot;     &quot;spectra&quot;    &quot;mcds&quot;       &quot;lethal&quot;     &quot;dnmt&quot;      
- [6] &quot;daughter&quot;   &quot;mscentiped&quot; &quot;drivermap&quot;  &quot;dnmts&quot;      &quot;triplet&quot;   
-[11] &quot;prs&quot;        &quot;signatur&quot;   &quot;edlogo&quot;     &quot;cage&quot;       &quot;logo&quot;      
-[16] &quot;rpf&quot;        &quot;tssqtls&quot;    &quot;uacd&quot;       &quot;charg&quot;      &quot;strand&quot;    </code></pre>
+<pre><code> [1] &quot;peptid&quot;     &quot;workflowr&quot;  &quot;spectra&quot;    &quot;fucci&quot;      &quot;translat&quot;  
+ [6] &quot;mscentiped&quot; &quot;tssqtls&quot;    &quot;cage&quot;       &quot;ribosom&quot;    &quot;git&quot;       
+[11] &quot;cds&quot;        &quot;mcds&quot;       &quot;logo&quot;       &quot;rbp&quot;        &quot;protein&quot;   
+[16] &quot;centiped&quot;   &quot;spectrum&quot;   &quot;cycl&quot;       &quot;frame&quot;      &quot;rmd&quot;       </code></pre>
 </div>
 <div id="topic-5" class="section level2">
 <h2>Topic 5</h2>
-<p>Topic 5 picks out the two large-scale GWAS enrichment studies. A nice topic!</p>
+<p>Topic 5 covers papers on haplotypes and recombination. Also some imputation. A nice topic.</p>
 <pre class="r"><code>plot(fit_multinom$L[,5])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,5]&gt;0.9)</code></pre>
-<pre><code>        barber2010.pdf     carbonetto2013.pdf           hart2012.pdf 
-                    21                     29                     55 
-        Reiner2008.pdf s41467-018-06805-x.pdf          shim2015b.pdf 
-                    85                     90                    104 </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-11-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,5]&gt;0.8)</code></pre>
+<pre><code>   Bhangale2006.pdf    Crawford2004.pdf     DuRaedt2006.pdf   g3journal0457.pdf 
+                 24                  30                  33                  45 
+     HapMap2005.pdf Hellenthal2006a.pdf Hellenthal2006b.pdf       Howie2012.pdf 
+                 54                  56                  57                  59 
+   Marchini2006.pdf        Ptak2004.pdf      Scheet2006.pdf      Scheet2008.pdf 
+                 70                  81                  98                  99 
+   Stephens2005.pdf    Stephens2006.pdf         Wen2010.pdf 
+                114                 115                 124 </code></pre>
 <pre class="r"><code>print_keywords(5)</code></pre>
-<pre><code> [1] &quot;subfract&quot;    &quot;ldlc&quot;        &quot;gatm&quot;        &quot;pathway&quot;     &quot;statin&quot;     
- [6] &quot;princ&quot;       &quot;cetp&quot;        &quot;mhc&quot;         &quot;parc&quot;        &quot;chs&quot;        
-[11] &quot;plasma&quot;      &quot;cdh&quot;         &quot;idl&quot;         &quot;cap&quot;         &quot;priorit&quot;    
-[16] &quot;drug&quot;        &quot;rsse&quot;        &quot;simvastatin&quot; &quot;apo&quot;         &quot;session&quot;    </code></pre>
+<pre><code> [1] &quot;hap&quot;         &quot;hot&quot;         &quot;hotspot&quot;     &quot;crossov&quot;     &quot;trio&quot;       
+ [6] &quot;indel&quot;       &quot;scheet&quot;      &quot;haplotyp&quot;    &quot;lotyp&quot;       &quot;beagl&quot;      
+[11] &quot;sperm&quot;       &quot;dbsnp&quot;       &quot;haplo&quot;       &quot;discrep&quot;     &quot;reconstruct&quot;
+[16] &quot;jeffrey&quot;     &quot;marchini&quot;    &quot;ceu&quot;         &quot;mask&quot;        &quot;meiotic&quot;    </code></pre>
 </div>
 <div id="topic-6" class="section level2">
 <h2>Topic 6</h2>
-<p>Topic 6 picks out the elephant-related papers as well as some more pop-gen related papers. It seems again that more than one topic has been merged… probably because I used too few topics.</p>
+<p>Topic 6 covers papers on methods development for GWAS, including varbvs and susie.</p>
 <pre class="r"><code>plot(fit_multinom$L[,6])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,6]&gt;0.9)</code></pre>
-<pre><code>1337008e-1f01-45e0-b363-2fb1ae2fadf8_20843_-_john_blischak.pdf 
-                                                             2 
-                                             g3journal0457.pdf 
-                                                            45 
-                                              genetics0789.pdf 
-                                                            47 
-                                                 Howie2012.pdf 
-                                                            59 
-                                              Marchini2006.pdf 
-                                                            70 
-                                                Scheet2006.pdf 
-                                                            98 
-                                                Scheet2008.pdf 
-                                                            99 
-                                             Stephens2003a.pdf 
-                                                           112 
-                                              Stephens2005.pdf 
-                                                           114 </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-12-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,6]&gt;0.8)</code></pre>
+<pre><code>              1709.06597.pdf 2021.11.03.467167v1.full.pdf 
+                           4                           12 
+           501114v4.full.pdf           Carbonetto2012.pdf 
+                          17                           28 
+          carbonetto2013.pdf       s41467-018-06805-x.pdf 
+                          29                           90 </code></pre>
 <pre class="r"><code>print_keywords(6)</code></pre>
-<pre><code> [1] &quot;workflowr&quot;   &quot;khap&quot;        &quot;hap&quot;         &quot;git&quot;         &quot;niu&quot;        
- [6] &quot;updog&quot;       &quot;ldbase&quot;      &quot;scheet&quot;      &quot;trio&quot;        &quot;rmd&quot;        
-[11] &quot;prephas&quot;     &quot;fastphas&quot;    &quot;lotyp&quot;       &quot;gmb&quot;         &quot;wwwajhgorg&quot; 
-[16] &quot;discrep&quot;     &quot;beagl&quot;       &quot;imput&quot;       &quot;wphase&quot;      &quot;reconstruct&quot;</code></pre>
+<pre><code> [1] &quot;varbv&quot;     &quot;ibss&quot;      &quot;susi&quot;      &quot;susiesuff&quot; &quot;css&quot;       &quot;rsse&quot;     
+ [7] &quot;pathway&quot;   &quot;susierss&quot;  &quot;mhc&quot;       &quot;dapg&quot;      &quot;priorit&quot;   &quot;logodd&quot;   
+[13] &quot;accbi&quot;     &quot;finemap&quot;   &quot;novemb&quot;    &quot;crohn’&quot;    &quot;arthriti&quot;  &quot;pip&quot;      
+[19] &quot;ser&quot;       &quot;scalabl&quot;  </code></pre>
 </div>
 <div id="topic-7" class="section level2">
 <h2>Topic 7</h2>
-<p>Topic 7 covers papers on methods development for GWAS, including BSLMM, BVSR, varbvs, GEMMA, and mulivariate GWAS. Also quite nice topic.</p>
+<p>Topic 7 includes papers on population structure and EEMS.</p>
 <pre class="r"><code>plot(fit_multinom$L[,7])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,7]&gt;0.9)</code></pre>
-<pre><code>  027.082.0408.pdf    alasadi2019.pdf       Basu2010.pdf    Falush2003a.pdf 
-                 1                 19                 23                 38 
-   Falush2003b.pdf     Falush2007.pdf     Hubisz2009.pdf   Novembre2008.pdf 
-                39                 40                 60                 74 
- Novembre2008b.pdf    Petkova2016.pdf Pritchard2000a.pdf Pritchard2000b.pdf 
-                75                 77                 79                 80 
-       raj2014.pdf 
-                82 </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-13-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,7]&gt;0.8)</code></pre>
+<pre><code>                                                                                                         alasadi2019.pdf 
+                                                                                                                      19 
+                                                                                                            Basu2010.pdf 
+                                                                                                                      23 
+                                                                                                         Falush2003a.pdf 
+                                                                                                                      38 
+                                                                                                         Falush2003b.pdf 
+                                                                                                                      39 
+                                                                                                          Falush2007.pdf 
+                                                                                                                      40 
+                                                                                                        genetics0789.pdf 
+                                                                                                                      47 
+Global Ecology and Biogeography - 2021 - White - Dispersal syndromes drive the formation of biogeographical regions .pdf 
+                                                                                                                      51 
+                                                                                                          Hubisz2009.pdf 
+                                                                                                                      60 
+                                                                                                        Novembre2008.pdf 
+                                                                                                                      74 
+                                                                                                       Novembre2008b.pdf 
+                                                                                                                      75 
+                                                                                                         Petkova2016.pdf 
+                                                                                                                      77 
+                                                                                                      Pritchard2000b.pdf 
+                                                                                                                      80 
+                                                                                                             raj2014.pdf 
+                                                                                                                      82 
+                                                                                                   s41437-018-0105-y.pdf 
+                                                                                                                      89 
+                                                                                                  s41467-019-10253-6.pdf 
+                                                                                                                      91 </code></pre>
 <pre class="r"><code>print_keywords(7)</code></pre>
-<pre><code> [1] &quot;eem&quot;          &quot;admixtur&quot;     &quot;deme&quot;         &quot;psc&quot;          &quot;faststructur&quot;
- [6] &quot;europ&quot;        &quot;coffe&quot;        &quot;migrat&quot;       &quot;pca&quot;          &quot;admix&quot;       
-[11] &quot;strat&quot;        &quot;falush&quot;       &quot;tdt&quot;          &quot;plk&quot;          &quot;novembr&quot;     
-[16] &quot;ptm&quot;          &quot;subpopul&quot;     &quot;fst&quot;          &quot;isol&quot;         &quot;structur&quot;    </code></pre>
+<pre><code> [1] &quot;admixtur&quot;     &quot;faststructur&quot; &quot;eem&quot;          &quot;europ&quot;        &quot;coffe&quot;       
+ [6] &quot;migrat&quot;       &quot;bird&quot;         &quot;climat&quot;       &quot;admix&quot;        &quot;pca&quot;         
+[11] &quot;psc&quot;          &quot;falush&quot;       &quot;fst&quot;          &quot;barrier&quot;      &quot;plant&quot;       
+[16] &quot;communiti&quot;    &quot;subpopul&quot;     &quot;strat&quot;        &quot;realm&quot;        &quot;dissimilar&quot;  </code></pre>
 </div>
 <div id="topic-8" class="section level2">
 <h2>Topic 8</h2>
-<p>Topic 8 covers papers on non-GWAS methods development, particularly centered around ash and RUV.</p>
+<p>Topic 8 is more “classic” popgen stuff.</p>
 <pre class="r"><code>plot(fit_multinom$L[,8])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,8]&gt;0.9)</code></pre>
-<pre><code>              1709.06597.pdf    2012_Zhou&amp;Stephens_NG.pdf 
-                           4                            9 
-        2013_Zhouetal_PG.pdf    2014_Zhou&amp;Stephens_NM.pdf 
-                          10                           11 
-2021.11.03.467167v1.full.pdf            501114v4.full.pdf 
-                          12                           17 
-        AOAS0912-021R2A0.pdf           Carbonetto2012.pdf 
-                          20                           28 
-            Stephens2009.pdf             stephens2013.pdf 
-                         116                          117 
-         WenStephens2014.pdf                  Zhu2017.pdf 
-                         125                          126 </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-14-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,8]&gt;0.8)</code></pre>
+<pre><code>    genetics1243.pdf Roychoudhury2007.pdf         step0444.pdf 
+                  48                   86                  106 
+   Stephens2000a.pdf    Stephens2000b.pdf    Stephens2000d.pdf 
+                 107                  108                  110 
+   Stephens2003b.pdf 
+                 113 </code></pre>
 <pre class="r"><code>print_keywords(8)</code></pre>
-<pre><code> [1] &quot;bslmm&quot;        &quot;varbv&quot;        &quot;css&quot;          &quot;ibss&quot;         &quot;●●●&quot;         
- [6] &quot;eﬀect&quot;        &quot;susierss&quot;     &quot;subgroup&quot;     &quot;susiesuff&quot;    &quot;rpg&quot;         
-[11] &quot;gemma&quot;        &quot;lasso&quot;        &quot;bvsr&quot;         &quot;dapg&quot;         &quot;variabl&quot;     
-[16] &quot;hyperparamet&quot; &quot;susi&quot;         &quot;qtn&quot;          &quot;pve&quot;          &quot;ser&quot;         </code></pre>
+<pre><code> [1] &quot;lethal&quot;       &quot;recess&quot;       &quot;genealog&quot;     &quot;tavare\020&quot;   &quot;griffith&quot;    
+ [6] &quot;hutterit&quot;     &quot;gri\u0081th&quot;  &quot;e\u0081cient&quot; &quot;backward&quot;     &quot;kuhner&quot;      
+[11] &quot;felsenstein&quot;  &quot;neutral&quot;      &quot;ancestor&quot;     &quot;stationari&quot;   &quot;benefici&quot;    
+[16] &quot;constants&quot;    &quot;carrier&quot;      &quot;age&quot;          &quot;chain&quot;        &quot;coalesc&quot;     </code></pre>
 </div>
 <div id="topic-9" class="section level2">
 <h2>Topic 9</h2>
-<p>Topic 9 covers papers on structure and EEMS. Also a nice topic.</p>
+<p>Topic 9 includes non-gwas methods development, including RUV and ash.</p>
 <pre class="r"><code>plot(fit_multinom$L[,9])</code></pre>
 <p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,9]&gt;0.9)</code></pre>
-<pre><code>    Crawford2004.pdf  Hellenthal2006a.pdf  Hellenthal2006b.pdf 
-                  30                   56                   57 
-  Hellenthal2007.pdf           Li2003.pdf       Mondol2015.pdf 
-                  58                   62                   72 
-          msy006.pdf Roychoudhury2007.pdf         step0444.pdf 
-                  73                   86                  106 
-   Stephens2000a.pdf    Stephens2000d.pdf    Stephens2003b.pdf 
-                 107                  110                  113 
-      Wasser2004.pdf       Wasser2007.pdf       Wasser2008.pdf 
-                 121                  122                  123 </code></pre>
-<pre class="r"><code>print_keywords(9)</code></pre>
-<pre><code> [1] &quot;hot&quot;         &quot;tusk&quot;        &quot;ivori&quot;       &quot;mrca&quot;        &quot;asg&quot;        
- [6] &quot;crossov&quot;     &quot;seizur&quot;      &quot;kuhner&quot;      &quot;poach&quot;       &quot;trade&quot;      
-[11] &quot;sperm&quot;       &quot;tavare\020&quot;  &quot;tmrca&quot;       &quot;genealog&quot;    &quot;gri\u0081th&quot;
-[16] &quot;hotspot&quot;     &quot;wasser&quot;      &quot;tavareâ&quot;     &quot;tap&quot;         &quot;griffith&quot;   </code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-15-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="topic-10" class="section level2">
-<h2>Topic 10</h2>
-<p>Topic 10 covers papers on haplotypes and recombination. Also some imputation. Another nice topic.</p>
-<pre class="r"><code>plot(fit_multinom$L[,10])</code></pre>
-<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>which(fit_multinom$L[,10]&gt;0.9)</code></pre>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,9]&gt;0.8)</code></pre>
 <pre><code>                                                                                                      1705.08393.pdf 
                                                                                                                    3 
                                                                                                       1812.07488.pdf 
@@ -876,18 +1260,75 @@ A Fast Algorithm for Maximum Likelihood Estimation of Mixture Proportions Using 
                                                                                                                   18 
                                                                                                   biosts_21_1_15.pdf 
                                                                                                                   25 
-                                                                                                    Gottardo2006.pdf 
-                                                                                                                  52 
                                                                                                           kxw041.pdf 
                                                                                                                   61 
                                                                                                 lu-stephens-2016.pdf 
                                                                                                                   65 </code></pre>
+<pre class="r"><code>print_keywords(9)</code></pre>
+<pre><code> [1] &quot;ruv&quot;         &quot;ebnm&quot;        &quot;smash&quot;       &quot;efron&quot;       &quot;unimod&quot;     
+ [6] &quot;ash&quot;         &quot;nmf&quot;         &quot;nonparametr&quot; &quot;mash&quot;        &quot;silverman&quot;  
+[11] &quot;runtim&quot;      &quot;shrinkag&quot;    &quot;johnston&quot;    &quot;topic&quot;       &quot;gaussian&quot;   
+[16] &quot;nonneg&quot;      &quot;extrapol&quot;    &quot;sparsiti&quot;    &quot;empir&quot;       &quot;solv&quot;       </code></pre>
+</div>
+<div id="topic-10" class="section level2">
+<h2>Topic 10</h2>
+<p>Topic 10 includes large-scale GWAS, BSLMM/LMM as well as multivariate testing.</p>
+<pre class="r"><code>plot(fit_multinom$L[,10])</code></pre>
+<p><img src="figure/01_tm_fastTopics.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
+Past versions of unnamed-chunk-16-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephens999/ds_text_analysis/blob/e43ad8bbd5c4bf8add9913800b630eb0f7b2e9f8/docs/figure/01_tm_fastTopics.Rmd/unnamed-chunk-16-1.png" target="_blank">e43ad8b</a>
+</td>
+<td>
+Matthew Stephens
+</td>
+<td>
+2022-01-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>which(fit_multinom$L[,10]&gt;0.8)</code></pre>
+<pre><code>     2013_Zhouetal_PG.pdf 2014_Zhou&amp;Stephens_NM.pdf      AOAS0912-021R2A0.pdf 
+                       10                        11                        20 
+           barber2010.pdf              hart2012.pdf            Reiner2008.pdf 
+                       21                        55                        85 
+    s41588-020-0631-4.pdf            Servin2007.pdf             shim2015b.pdf 
+                       94                       102                       104 
+         Stephens2009.pdf          stephens2013.pdf           turchin2019.pdf 
+                      116                       117                       118 
+      WenStephens2014.pdf               Zhu2017.pdf 
+                      125                       126 </code></pre>
 <pre class="r"><code>print_keywords(10)</code></pre>
-<pre><code> [1] &quot;ebnm&quot;          &quot;ruv&quot;           &quot;nmf&quot;           &quot;smash&quot;        
- [5] &quot;scrnaseq&quot;      &quot;gom&quot;           &quot;efron&quot;         &quot;unimod&quot;       
- [9] &quot;ebmf&quot;          &quot;gagnonbartsch&quot; &quot;imag&quot;          &quot;nonparametr&quot;  
-[13] &quot;cashr&quot;         &quot;limmar&quot;        &quot;vash&quot;          &quot;johnston&quot;     
-[17] &quot;solv&quot;          &quot;nonneg&quot;        &quot;topic&quot;         &quot;runtim&quot;       </code></pre>
+<pre><code> [1] &quot;bslmm&quot;         &quot;crp&quot;           &quot;multivari&quot;     &quot;subfract&quot;     
+ [5] &quot;subgroup&quot;      &quot;univari&quot;       &quot;qtn&quot;           &quot;plasma&quot;       
+ [9] &quot;metaanalysi&quot;   &quot;frequentist&quot;   &quot;phenotyp&quot;      &quot;drug&quot;         
+[13] &quot;particip&quot;      &quot;pve&quot;           &quot;ldl&quot;           &quot;imputationbas&quot;
+[17] &quot;lmm&quot;           &quot;cholesterol&quot;   &quot;gemma&quot;         &quot;caus&quot;         </code></pre>
 </div>
 </div>
 <div id="summary" class="section level1">
