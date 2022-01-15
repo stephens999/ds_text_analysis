@@ -9,7 +9,7 @@ editor_options:
 ---
 
 
-# Sometext analysis investigations
+# Text analysis investigations
 
 * [Create term-document matrix from my papers](00_tm.html)
 * [Run fastTopics on my papers](01_tm_fastTopics.html)
